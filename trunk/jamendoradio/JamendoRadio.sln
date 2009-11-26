@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jamendoradio", "jamendoradio", "{10C9AE48-A5A9-4820-B9B9-F39309B21845}"
+	ProjectSection(SolutionItems) = preProject
+		jamendoradio\JamendoRadio.crx = jamendoradio\JamendoRadio.crx
+		jamendoradio\JamendoRadio.pem = jamendoradio\JamendoRadio.pem
+		jamendoradio\Options.png = jamendoradio\Options.png
+		jamendoradio\Popup.png = jamendoradio\Popup.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JamendoRadio", "JamendoRadio", "{484AD356-5074-40F2-AFD7-5EB40033FF5B}"
+	ProjectSection(SolutionItems) = preProject
+		jamendoradio\JamendoRadio\background.html = jamendoradio\JamendoRadio\background.html
+		jamendoradio\JamendoRadio\JamendoRadio.js = jamendoradio\JamendoRadio\JamendoRadio.js
+		jamendoradio\JamendoRadio\manifest.json = jamendoradio\JamendoRadio\manifest.json
+		jamendoradio\JamendoRadio\options.html = jamendoradio\JamendoRadio\options.html
+		jamendoradio\JamendoRadio\popup.html = jamendoradio\JamendoRadio\popup.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{4BA2B1BB-5EC1-43D2-90C6-E08DE961C13B}"
+	ProjectSection(SolutionItems) = preProject
+		jamendoradio\JamendoRadio\Images\control_fastforward.png = jamendoradio\JamendoRadio\Images\control_fastforward.png
+		jamendoradio\JamendoRadio\Images\control_pause.png = jamendoradio\JamendoRadio\Images\control_pause.png
+		jamendoradio\JamendoRadio\Images\control_play.png = jamendoradio\JamendoRadio\Images\control_play.png
+		jamendoradio\JamendoRadio\Images\control_stop.png = jamendoradio\JamendoRadio\Images\control_stop.png
+		jamendoradio\JamendoRadio\Images\control_volume.png = jamendoradio\JamendoRadio\Images\control_volume.png
+		jamendoradio\JamendoRadio\Images\icon.png = jamendoradio\JamendoRadio\Images\icon.png
+		jamendoradio\JamendoRadio\Images\Icon128.png = jamendoradio\JamendoRadio\Images\Icon128.png
+		jamendoradio\JamendoRadio\Images\Icon16.png = jamendoradio\JamendoRadio\Images\Icon16.png
+		jamendoradio\JamendoRadio\Images\Icon32.png = jamendoradio\JamendoRadio\Images\Icon32.png
+		jamendoradio\JamendoRadio\Images\Icon48.png = jamendoradio\JamendoRadio\Images\Icon48.png
+		jamendoradio\JamendoRadio\Images\splash.jpg = jamendoradio\JamendoRadio\Images\splash.jpg
+		jamendoradio\JamendoRadio\Images\trash.png = jamendoradio\JamendoRadio\Images\trash.png
+		jamendoradio\JamendoRadio\Images\volume_bg.png = jamendoradio\JamendoRadio\Images\volume_bg.png
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{484AD356-5074-40F2-AFD7-5EB40033FF5B} = {10C9AE48-A5A9-4820-B9B9-F39309B21845}
+		{4BA2B1BB-5EC1-43D2-90C6-E08DE961C13B} = {484AD356-5074-40F2-AFD7-5EB40033FF5B}
+	EndGlobalSection
+EndGlobal
