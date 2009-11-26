@@ -1,0 +1,173 @@
+<html>
+<head>
+    <style type="text/css">
+        table { white-space: nowrap; } td { vertical-align:top; }
+        a { margin-right: 10px; cursor:hand; text-decoration:underline; }
+		#debug { width: 400px; }
+        #stationContainer { text-align:center; }
+        #controls { vertical-align: top; float: right; }
+        #controls a { width: 16px; display:block; height: 16px; margin-bottom:5px; text-decoration:none!important; }
+        #play { background: url(Images/control_pause.png) no-repeat; }
+        #stop { background: url(Images/control_stop.png) no-repeat; }
+        #next { background: url(Images/control_fastforward.png) no-repeat; }
+		#volume { cursor:hand; }
+        .paused { background: url(Images/control_play.png) no-repeat !important; }
+        .disabled { display:none; }
+        .empty { cursor:auto!important; text-decoration:none!important; }
+    </style>
+
+    <script type="text/javascript">
+        var bp = chrome.extension.getBackgroundPage();
+        bp.OnPositionChanged = loadPlayerInfo;
+
+        var commensePlayImmidiatly;
+
+        function main() {
+            stations.appendChild(getStationLink("Default", ""));
+
+            var storedStations = eval(localStorage["Stations"]);
+            if (storedStations) {
+                for (i = 0; i < storedStations.length; i++) {
+                    stations.appendChild(getStationLink(storedStations[i].Name, storedStations[i].Subset));
+                }
+            }
+
+            if (bp.IsReady)
+                loadPlayerInfo(bp.CurrentData);
+        }
+
+        function loadPlayerInfo(data) {
+            var image = document.getElementById("image");
+            var name = document.getElementById("name");
+            var artist_name = document.getElementById("artist_name");
+            var album_name = document.getElementById("album_name");
+
+            image.src = data.album_image;
+            name.innerText = data.name;
+            artist_name.innerText = data.artist_name;
+            album_name.innerText = data.album_name;
+
+            if (data.artist_url)
+                artist_name.onclick = function() { chrome.windows.create({ "url": data.artist_url }); };
+            else
+                artist_name.onclick = null;
+
+            if (data.album_url)
+                album_name.onclick = function() { chrome.windows.create({ "url": data.album_url }); };
+            else
+                album_name.onclick = null;
+                
+
+            var controls = document.getElementById("controls");
+
+            if (bp.IsReady) {
+                controls.className = "";
+                artist_name.className = "";
+                album_name.className = "";
+				
+				var knob = document.getElementById("volumeknob"); var slide = document.getElementById("volume"); 
+				knob.style.top = slide.offsetHeight - (bp.audio.volume * slide.offsetHeight) + "px";
+            }
+            else {
+                controls.className = "disabled";
+                artist_name.className = "empty";
+                album_name.className = "empty";
+            }
+
+            var playPauseButton = document.getElementById("play");
+            if (commensePlayImmidiatly) {
+                playPauseButton.className = "";
+                bp.Play();            
+                commensePlayImmidiatly = false;
+            }
+            else if (bp.IsPlaying)
+                playPauseButton.className = "";
+            else
+                playPauseButton.className = "paused";
+
+
+        }
+
+        function PlayPause(element) {
+            bp.Pause(element)
+        }
+        function Stop(element) {
+            bp.Unload();
+            loadPlayerInfo({ "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" });
+        }
+        function Next(element) {
+ 
+            bp.Next();
+        }
+        
+		function LoadStation(subset) {
+            commensePlayImmidiatly = true;
+            bp.LoadPlayListObject(subset);
+        }
+
+        function getStationLink(name, subset) {
+            var radio = document.createElement("a");
+            radio.onclick = function() { LoadStation(subset); };
+            radio.innerText = name;
+
+            return radio;
+        }
+		
+		function SetVolume(element) {
+			var knob = document.getElementById("volumeknob"); var slide = document.getElementById("volume");
+			
+			var offset = event.offsetY;
+			if(event.srcElement == knob)
+				offset += parseInt(knob.style.top);
+				
+			var volume = (slide.offsetHeight - offset) / slide.offsetHeight;
+					
+			knob.style.top = offset + "px";
+			bp.setVolume(volume);
+		}
+        
+    </script>
+
+</head>
+<body onload="main();">
+    <table>
+        <tr>
+            <td rowspan="3">
+                <img id="image" src="Images/splash.jpg" style="margin: 5px; vertical-align: top; float: left;" />
+            </td>
+            <td>
+                <div id="name" style="font-size: 1.5em;">
+                    No radio loaded</div>
+            </td>
+			<td rowspan="4">
+				<div id="controls" class="disabled">
+					<a id="play" class="paused" onclick="PlayPause(this);">&nbsp;</a>
+					<a id="stop" onclick="Stop(this);">&nbsp;</a>
+					<a id="next" onclick="Next(this);">&nbsp;</a>
+					<div id="volume" onmousedown="SetVolume(this);" style="background:url(Images/volume_bg.png) repeat-y;width:16px;height:80px;">
+						<img id="volumeknob" src="Images/control_volume.png" style="position:relative;top:25px;" />
+					</div>
+				</div>			
+			</td>
+        </tr>
+        <tr>
+            <td>
+                <a id="album_name" style="color: #999;" class="empty">
+                    Please select a</a>
+        </tr>
+        <tr>
+            <td>
+                <a id="artist_name" style="color: #999;" class="empty">
+                    channel below...</a></td>
+        </tr>
+		<tr>
+			<td colspan="3">
+				<hr style="width: 75%; color:#aaa;" />
+				<div id="stationContainer"><span id="stations" /></div>
+			</td>
+		</tr>
+    </table>
+	
+
+</body>
+</html>

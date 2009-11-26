@@ -1,0 +1,122 @@
+<html>
+<head>
+    <title>Jamendo Radio Configuration</title>
+
+    <script type="text/javascript">
+        function save_options() {
+            var settingsTable = document.getElementById("settingsTable");
+            var options = new Array();
+
+            for (i = 0; i < settingsTable.rows.length; i++) {
+                var cell = settingsTable.rows[i].children[1];
+                var name = cell.firstChild.value;
+
+                cell = cell.nextSibling;
+                var subset = cell.firstChild.value;
+
+                if (name && subset)
+                    options[options.length] = { "Name": name, "Subset": subset };
+            }
+
+            localStorage["Stations"] = JSON.stringify(options);
+			localStorage["SiteIntegration"] = JSON.stringify(document.getElementById("pageIntegration").checked);
+        }
+        function restore_options() {
+            var stations = eval(localStorage["Stations"]);
+            if (!stations || stations.length == 0) { populateDefault(); }
+
+            for (i = 0; i < stations.length; i++) {
+                AddRow(stations[i].Name, stations[i].Subset);
+            }
+			
+			document.getElementById("pageIntegration").checked = eval(localStorage["SiteIntegration"]);
+        }
+        function populateDefault() {
+            AddRow("Rock", "tag_idstr=rock");
+            AddRow("Piano", "album_id=29114+29279+888+2007+53704+55571+36218+889");
+            AddRow("Trance", "artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six");
+        }
+
+        function AddRow(name, subset) {
+            var settingsTable = document.getElementById("settingsTable");
+
+            var newRow = document.createElement("tr");
+            var nameCell = document.createElement("td");
+            var nameEditor = document.createElement("input");
+            var subsetCell = document.createElement("td");
+            var subsetEditor = document.createElement("input");
+            var controlCell = document.createElement("td");
+            var controlButton = document.createElement("img");
+
+            controlButton.onclick = function() { settingsTable.removeChild(newRow); };
+            controlButton.src = "Images/trash.png";
+            controlCell.appendChild(controlButton);
+
+            if (name)
+                nameEditor.value = name;
+            if (subset)
+                subsetEditor.value = subset;
+
+            nameCell.appendChild(nameEditor);
+            subsetCell.appendChild(subsetEditor);
+
+
+            newRow.appendChild(controlCell);
+            newRow.appendChild(nameCell);
+            newRow.appendChild(subsetCell);
+
+
+            settingsTable.appendChild(newRow);
+        }
+        function RemoveRow(index) {
+            var settingsTable = document.getElementById("settingsTable");
+        }
+
+    </script>
+
+    <style type="text/css">
+        thead tr
+        {
+            border-bottom: 1px solid black;
+        }
+        input
+        {
+            width: 95%;
+        }
+    </style>
+</head>
+<body onload="restore_options()">
+	<h1>
+		General settings</h1>
+	<input type="checkbox" id="pageIntegration" style="width: 75px;">Integrate with jamendo.com</input>
+    <h1>
+        Channel setup</h1>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <td style="width: 20px;">
+                    &nbsp;
+                </td>
+                <td style="width: 250px;">
+                    Name
+                </td>
+                <td>
+                    Subset
+                </td>
+                <td>
+                </td>
+            </tr>
+        </thead>
+        <tbody id="settingsTable">
+        </tbody>
+    </table>
+    <br />
+    <button onclick="save_options()">
+        Save</button>
+    <button onclick="AddRow();">
+        Add</button>
+	<div style="float:right">Contact the <a href="mailto://fredrik.schiller@gmail.com">Author</a>. Please read the 
+		<a href="http://developer.jamendo.com/en/wiki/ApiTermsOfUse">Jamendo API Terms of use</a>
+	</div>
+</body>
+</html>

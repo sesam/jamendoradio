@@ -1,0 +1,149 @@
+<script>
+    //State variables
+    var IsPlaying;
+    var IsReady;
+    var CurrentData;
+    var CurrentPosition;
+    
+    //Position changed callback (this updates the gui in popup.html)
+    var OnPositionChanged;
+
+    //Internals
+    var audio = new Audio();
+    var playList;
+    var currentSubset;
+	var loop;
+	var timeKeeper;
+
+    //Check if the current song has ended, and advance playlist to next item if that is the case.
+    setInterval(function() { if (IsPlaying && audio.ended) Next(); }, 250);
+	
+	chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
+		if(request.target) {
+			switch(request.target) {
+				case "manipulatePage": sendResponse({GoAhead:eval(localStorage["SiteIntegration"])}); return;
+				case "loadAlbumPlayList": LoadAlbum(request.data); break;
+				case "loadTrackPlayList": LoadTrack(request.data); break;
+				case "loadArtistRadio": LoadArtist(request.data); break;
+			}
+			sendResponse();
+		}
+		else 
+			sendResponse({});
+	});
+
+    function LoadPlayListObject(subset, callBack, preLoad, config) {
+        var url = "http://api.jamendo.com/get2/" + 
+            "name+stream+album_name+album_url+album_image+artist_name+artist_url" + //Fields
+            "/track/json/track_album+album_artist/"; //Unit, format and explicit joins
+            
+		if(!config) { loop = false; url += "?n=5&nshuffle=500&streamencoding=ogg2&"; }//Default options (take five from a randomized set of 500, and we use ogg encoding)
+		else { loop = true; url += config; }
+		
+		//We need to store the criteria, to enable prefetching playlist items.
+        if (!preLoad && !subset)
+            currentSubset = "order=ratingmonth_desc";
+        else if (!preLoad)
+            currentSubset = subset;
+
+        url += currentSubset;
+
+        var req = new XMLHttpRequest();
+		if (timeKeeper) { 
+			setTimeout(function() { LoadPlayListObject(subset, callBack, preLoad, config); }, 1000);
+			return; 
+		}
+		timeKeeper = true;
+        req.open("GET", url, true);
+        req.onload = function() {
+            playList = eval(req.responseText);
+            IsReady = true;
+			
+            if (!preLoad) SetPlaylistPosition(0); 
+            if (callBack) callBack(playList); 
+			setTimeout(function() { timeKeeper = false; }, 1000);
+        };
+        req.send(null);
+    }
+
+	function LoadAlbum(id) 	{
+		LoadPlayListObject("album_id=" + id, Play, false, "?streamencoding=ogg2&");
+	}
+	function LoadTrack(id) {
+		LoadPlayListObject("id=" + id, Play, false, "?streamencoding=ogg2&");
+	}
+	function LoadArtist(name) {
+		LoadPlayListObject("artist_idstr=" + name, Play);
+	}
+	
+    function SetPlaylistPosition(position) {
+        CurrentPosition = position; CurrentData = playList[CurrentPosition];
+		
+		if(CurrentData) {
+			audio.src = CurrentData.stream;
+			audio.load();
+		}
+		else Unload();
+
+        if (OnPositionChanged)
+            OnPositionChanged(CurrentData);
+    }
+	
+    function Play() {
+        if (IsReady) {
+            audio.play();
+            IsPlaying = true;
+        }
+    }
+
+    //Toggles play pause, and can update a passed along elements css class.
+    function Pause(element) {
+        if (IsReady) {
+            if (audio.paused)
+                Play();
+            else {
+                audio.pause(); 
+                IsPlaying = false;
+            }
+
+            if (element) {
+                if (audio.paused)
+                    element.className = "paused";
+                else
+                    element.className = "";
+            }
+        }
+    }
+
+    //Loads the next song, and prefetches more if playlist is running out of items.
+    function Next() {
+        if (IsReady) {
+            var wp = IsPlaying;
+            SetPlaylistPosition(CurrentPosition + 1);
+            if (wp) Play();
+            
+            if (loop && CurrentPosition == (playList.length - 1)) CurrentPosition = -1;
+			else if (CurrentPosition == (playList.length - 1)) {
+                LoadPlayListObject(null, null, true)
+                CurrentPosition = -1;
+            }
+        }
+    }
+
+	//Set volume
+	function setVolume(value) {
+		audio.volume = value;
+	}
+	
+    //Stops playing and remove current playlist.
+    function Unload() {
+        audio.src = "";
+        audio.load();
+        playList = null;
+        IsReady = false;
+        IsPlaying = false;
+        CurrentData = null;
+        CurrentPosition = -1;
+    }
+</script>
+
