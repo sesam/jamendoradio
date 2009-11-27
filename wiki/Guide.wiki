@@ -21,6 +21,8 @@ Three main keys are used for selecting music:
 
   * *album_id*: Delimits track to the specified album(s). You can get the album id by looking at the end of the url of an album page on jamendo. <br>_Example: album_id=29114+29279+888+2007+53704_
 
+_*Note:* These keys does not combine well. Combinations are mostly intended for ordering (like weekly/monthly/overall popularity/ratings/reviews etc.). The key name here is "order"._ See the [http://developer.jamendo.com/en/wiki/Musiclist2Api Jamendo API documentation] for more information about ordering.
+
 == Say what? ==
 So lets say you find an album that you want to add to a channel. E.g. 
 http://www.jamendo.com/en/album/55571
