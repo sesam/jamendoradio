@@ -1,0 +1,35 @@
+##Guide to Jamendo Radio.
+
+= Usage =
+
+The popup lists the currently configured channels. To start, simply click the name.
+When the radio is playing, the popup will display the playback controls Play/Pause, Stop, Next and a volume control. (Note, the volume control does not support sliding, only clicking!)
+
+You can also allow the extension to integrate with www.jamendo.com, and make all play-buttons start the music within this extension.
+
+
+= Configuration =
+
+To add more channels, use the options page. If you enter the options, with no channels configured, three sample channels will be added. A channel has a name and a “subset” string, which acts as criteria for music.
+
+When constructing the subset string use & (ampersand) to separate the key value pairs, and + (plus) to separate multiple values.
+
+Three main keys are used for selecting music:
+  * *tag_idstr* : Delimits tracks to the specified tag(s). <br>_Example: tag_idstr=rock, tag_idstr=classical+piano+calm_
+
+  * *artist_idstr* : Delimits tracks to the specified artist(s). You can get the idstr of an artist by looking at the end of the url of a artist page on jamendo. <br>_Example: artist_idstr=psydom, artist_idstr=Dazie_Mae_(2)+Diablo_Swing_Orchestra_(2)_
+
+  * *album_id*: Delimits track to the specified album(s). You can get the album id by looking at the end of the url of an album page on jamendo. <br>_Example: album_id=29114+29279+888+2007+53704_
+
+== Say what? ==
+So lets say you find an album that you want to add to a channel. E.g. 
+http://www.jamendo.com/en/album/55571
+
+See the last five digits?
+In the options, the subset string for “Piano” looks like this:
+“album_id=29114+29279+888+2007+53704″
+
+To include the newly found album in this selection set, I add the digits to the end of the subset string, separating it with a “+”. (For copy paste:
+“album_id=29114+29279+888+2007+53704+55571″).
+
+To add a new station, click add. Enter a name, i.e “Relaxing”. Then enter as subset string: “tag_idstr=relaxing+calm&order=ratingweek”.
