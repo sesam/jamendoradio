@@ -15,11 +15,11 @@ To add more channels, use the options page. If you enter the options, with no ch
 When constructing the subset string use & (ampersand) to separate the key value pairs, and + (plus) to separate multiple values.
 
 Three main keys are used for selecting music:
-  * *tag_idstr* : Delimits tracks to the specified tag(s). <br>_Example: tag_idstr=rock, tag_idstr=classical+piano+calm_
+  * *tag_idstr* : Delimits tracks to the specified tag(s). <br>_Example:_ {{{tag_idstr=rock, tag_idstr=classical+piano+calm}}}
 
-  * *artist_idstr* : Delimits tracks to the specified artist(s). You can get the idstr of an artist by looking at the end of the url of a artist page on jamendo. <br>_Example: artist_idstr=psydom, artist_idstr=Dazie_Mae_(2)+Diablo_Swing_Orchestra_(2)_
+  * *artist_idstr* : Delimits tracks to the specified artist(s). You can get the idstr of an artist by looking at the end of the url of a artist page on jamendo. <br>_Example:_ {{{artist_idstr=psydom, artist_idstr=Dazie_Mae_(2)+Diablo_Swing_Orchestra_(2)}}}
 
-  * *album_id*: Delimits track to the specified album(s). You can get the album id by looking at the end of the url of an album page on jamendo. <br>_Example: album_id=29114+29279+888+2007+53704_
+  * *album_id*: Delimits track to the specified album(s). You can get the album id by looking at the end of the url of an album page on jamendo. <br>_Example:_ {{{album_id=29114+29279+888+2007+53704}}}
 
 _*Note:* These keys does not combine well. Combinations are mostly intended for ordering (like weekly/monthly/overall popularity/ratings/reviews etc.). The key name here is "order"._ See the [http://developer.jamendo.com/en/wiki/Musiclist2Api Jamendo API documentation] for more information about ordering.
 
