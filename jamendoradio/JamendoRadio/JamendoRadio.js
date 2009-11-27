@@ -43,7 +43,7 @@ function createArtistRadio(cssClass) {
 	
 	var playButton = document.body.getElementsByClassName(cssClass)[0];
 	playButton.onclick = function() { 
-		chrome.extension.sendRequest({target: "loadArtistRadio", data: /[\w\.]+$/.exec(location.href)[0]}, function(response) { }); 
+		chrome.extension.sendRequest({target: "loadArtistRadio", data: /[\w\.%]+$/.exec(location.href)[0]}, function(response) { }); 
 		return false;
 	}
 }
