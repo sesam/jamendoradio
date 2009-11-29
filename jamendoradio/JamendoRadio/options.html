@@ -169,7 +169,7 @@
             </dd>
             <dt>Criteria</dt>
             <dd>
-                <textarea id="newValues" rows="6" cols="25" disabled="disabled" onblur="this.value = this.value.replace(/\n*$/, '');"></textarea></dd>
+                <textarea id="newValues" rows="6" cols="25" disabled="disabled" onblur="this.value = this.value.replace(/\n+/, '\n').replace(/\n*$/, '');"></textarea></dd>
             <dt>Sorting</dt>
             <dd>
                 <select id="newOrder">
