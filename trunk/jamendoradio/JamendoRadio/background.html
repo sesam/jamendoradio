@@ -14,6 +14,7 @@
     var currentSubset;
 	var loop;
 	var timeKeeper;
+	var volume = 1;
 
     //Check if the current song has ended, and advance playlist to next item if that is the case.
     setInterval(function() { if (IsPlaying && audio.ended) Next(); }, 250);
@@ -48,20 +49,18 @@
 
         url += currentSubset;
 
+        if (timeKeeper) return; //ignore spamming, conforms to API terms of use.
+        timeKeeper = true;
         var req = new XMLHttpRequest();
-		if (timeKeeper) { 
-			setTimeout(function() { LoadPlayListObject(subset, callBack, preLoad, config); }, 1000);
-			return; 
-		}
-		timeKeeper = true;
-        req.open("GET", url, true);
+        
+		req.open("GET", url, true);
         req.onload = function() {
             playList = eval(req.responseText);
             IsReady = true;
 			
             if (!preLoad) SetPlaylistPosition(0); 
             if (callBack) callBack(playList); 
-			setTimeout(function() { timeKeeper = false; }, 1000);
+			setTimeout(function() { timeKeeper = false; }, 1100);
         };
         req.send(null);
     }
@@ -80,7 +79,8 @@
         CurrentPosition = position; CurrentData = playList[CurrentPosition];
 		
 		if(CurrentData) {
-			audio.src = CurrentData.stream;
+		    audio.src = CurrentData.stream;
+		    audio.volume = 1;
 			audio.load();
 		}
 		else Unload();
@@ -92,6 +92,7 @@
     function Play() {
         if (IsReady) {
             audio.play();
+            if (volume) audio.volume = volume;
             IsPlaying = true;
         }
     }
@@ -132,8 +133,10 @@
 
 	//Set volume
 	function setVolume(value) {
-		audio.volume = value;
+	    audio.volume = value;
+	    volume = value;
 	}
+
 	
     //Stops playing and remove current playlist.
     function Unload() {
