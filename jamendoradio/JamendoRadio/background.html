@@ -54,19 +54,21 @@
         var req = new XMLHttpRequest();
         
 		req.open("GET", url, true);
-        req.onload = function() {
-            playList = eval(req.responseText);
-            IsReady = true;
-			
-            if (!preLoad) SetPlaylistPosition(0); 
-            if (callBack) callBack(playList); 
-			setTimeout(function() { timeKeeper = false; }, 1100);
-        };
+		req.onload = function () {
+		    playList = eval(req.responseText);
+		    setTimeout(function () { timeKeeper = false; }, 1100);
+            
+		    if (playList.length < 1) { alert('Criteria yilded no songs'); return; }
+		    IsReady = true;
+
+		    if (!preLoad) SetPlaylistPosition(0);
+		    if (callBack) callBack(playList);
+		};
         req.send(null);
     }
 
 	function LoadAlbum(id) 	{
-		LoadPlayListObject("album_id=" + id, Play, false, "?streamencoding=ogg2&");
+	    LoadPlayListObject("album_id=" + id, Play, false, "?streamencoding=ogg2&order=numalbum_asc&");
 	}
 	function LoadTrack(id) {
 		LoadPlayListObject("id=" + id, Play, false, "?streamencoding=ogg2&");
@@ -77,6 +79,11 @@
 	
     function SetPlaylistPosition(position) {
         CurrentPosition = position; CurrentData = playList[CurrentPosition];
+        
+        if (CurrentPosition >= (playList.length - 1)) { //Last song in playlist.
+            CurrentPosition = -1;
+            if (!loop) LoadPlayListObject(null, null, true) //If not looping a fixed playlist, prefetch new songs from jamendo.
+        }
 		
 		if(CurrentData) {
 		    audio.src = CurrentData.stream;
@@ -122,12 +129,6 @@
             var wp = IsPlaying;
             SetPlaylistPosition(CurrentPosition + 1);
             if (wp) Play();
-            
-            if (loop && CurrentPosition == (playList.length - 1)) CurrentPosition = -1;
-			else if (CurrentPosition == (playList.length - 1)) {
-                LoadPlayListObject(null, null, true)
-                CurrentPosition = -1;
-            }
         }
     }
 

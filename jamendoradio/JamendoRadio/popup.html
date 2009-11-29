@@ -37,6 +37,8 @@
         }
 
         function loadPlayerInfo(data) {
+            if (!data) Stop();
+        
             var image = document.getElementById("image");
             var name = document.getElementById("name");
             var artist_name = document.getElementById("artist_name");
