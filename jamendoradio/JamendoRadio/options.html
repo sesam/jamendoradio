@@ -1,7 +1,6 @@
 <html>
 <head>
     <title>Jamendo Radio Configuration</title>
-
     <script type="text/javascript">
         function save_options() {
             var settingsTable = document.getElementById("settingsTable");
@@ -19,7 +18,7 @@
             }
 
             localStorage["Stations"] = JSON.stringify(options);
-			localStorage["SiteIntegration"] = JSON.stringify(document.getElementById("pageIntegration").checked);
+            localStorage["SiteIntegration"] = JSON.stringify(document.getElementById("pageIntegration").checked);
         }
         function restore_options() {
             var stations = eval(localStorage["Stations"]);
@@ -28,8 +27,8 @@
             for (i = 0; i < stations.length; i++) {
                 AddRow(stations[i].Name, stations[i].Subset);
             }
-			
-			document.getElementById("pageIntegration").checked = eval(localStorage["SiteIntegration"]);
+
+            document.getElementById("pageIntegration").checked = eval(localStorage["SiteIntegration"]);
         }
         function populateDefault() {
             AddRow("Rock", "tag_idstr=rock");
@@ -48,7 +47,7 @@
             var controlCell = document.createElement("td");
             var controlButton = document.createElement("img");
 
-            controlButton.onclick = function() { settingsTable.removeChild(newRow); };
+            controlButton.onclick = function () { settingsTable.removeChild(newRow); };
             controlButton.src = "Images/trash.png";
             controlCell.appendChild(controlButton);
 
@@ -71,9 +70,25 @@
         function RemoveRow(index) {
             var settingsTable = document.getElementById("settingsTable");
         }
+        function AddStation() {
+            if (!newSet.value && !newOrder.value) { alert("Please specify sort order"); return; }
+            if (newSet.value && !newValues.value) { alert("Please specify criteria"); return; }
+            if (!newName.value) { alert("Please pick a name for this station"); return; }
+            if (newValues.value && newValues.value.indexOf(' ') > -1) { alert("Criteria may not contain spaces.\nSeparate them by placing one on each row..."); return; }
 
+            var order = "";
+            var set = "";
+
+            if (newSet.value) set = newSet.value + "=" + newValues.value.replace(/\n/mg, '+');
+            if (newOrder.value) order = "order=" + newOrder.value;
+
+            var subset;
+            if (set && order) set += "&";
+            AddRow(newName.value, set + order);
+
+            designer.className = 'hidden';
+        }
     </script>
-
     <style type="text/css">
         thead tr
         {
@@ -83,12 +98,37 @@
         {
             width: 95%;
         }
+        dt, dd
+        {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+        dt
+        {
+            width: 30%;
+            font-weight: bold;
+        }
+        dd
+        {
+            width: 60%;
+        }
+        textarea
+        {
+            vertical-align: text-top;
+            width: 95%;
+        }
+        .hidden
+        {
+            display: none;
+        }
     </style>
 </head>
 <body onload="restore_options()">
-	<h1>
-		General settings</h1>
-	<input type="checkbox" id="pageIntegration" style="width: 75px;" />Integrate with jamendo.com
+    <h1>
+        General settings</h1>
+    <input type="checkbox" id="pageIntegration" style="width: 75px;" />Integrate with
+    jamendo.com
     <h1>
         Channel setup</h1>
     <table style="width: 100%;">
@@ -111,12 +151,57 @@
         </tbody>
     </table>
     <br />
+    <div id="designer" style="border: 1px solid black; position: absolute; top: 30%;
+        padding: 10px; left: 50%; width: 300px; margin-left: -150px; background: white;"
+        class="hidden">
+        <dl>
+            <dt>Name</dt>
+            <dd>
+                <input id="newName" /></dd>
+            <dt>Selection</dt>
+            <dd>
+                <select id="newSet" onchange="newValues.disabled = this.selectedIndex == 0">
+                    <option value="">Everyting</option>
+                    <option value="tag_idstr">Tag(s)</option>
+                    <option value="artist_idstr">Artist(s)</option>
+                    <option value="album_id">Album(s)</option>
+                </select>
+            </dd>
+            <dt>Criteria</dt>
+            <dd>
+                <textarea id="newValues" rows="6" cols="25" disabled="disabled"></textarea></dd>
+            <dt>Sorting</dt>
+            <dd>
+                <select id="newOrder">
+                    <option value="">No sorting</option>
+                    <option value="releasedate">Release date</option>
+                    <option value="rating">Rating</option>
+                    <option value="ratingweek">Rating (weekly)</option>
+                    <option value="ratingmonth">Rating (monthy)</option>
+                    <option value="playlisted">Playlisted</option>
+                    <option value="downloaded">Downloaded</option>
+                    <option value="listened">Listened</option>
+                    <option value="starred">Favourited</option>
+                </select>
+            </dd>
+        </dl>
+        <div style="text-align: center;">
+            <button id="clearDesigner" onclick="newName.value = newSet.value = newValues.value = newOrder.value = '';newValues.disabled = true">
+                Clear</button>
+            <button onclick="AddStation();">
+                Add station</button>
+            <button onclick="designer.className='hidden'">
+                Cancel</button>
+        </div>
+    </div>
+    <button onclick="AddRow();">
+        Add new row</button>
+    <button onclick="clearDesigner.click();designer.className = '';">
+        Open channel designer</button>
     <button onclick="save_options()">
         Save</button>
-    <button onclick="AddRow();">
-        Add</button>
-	<div style="float:right">Contact the <a href="mailto://fredrik.schiller@gmail.com">Author</a>. Please read the 
-		<a href="http://developer.jamendo.com/en/wiki/ApiTermsOfUse">Jamendo API Terms of use</a>
-	</div>
+    <div style="float: right">
+        Project <a href="http://code.google.com/p/jamendoradio/">home page</a>.
+    </div>
 </body>
 </html>
