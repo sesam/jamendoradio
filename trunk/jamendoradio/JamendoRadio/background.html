@@ -58,7 +58,7 @@
 		    playList = eval(req.responseText);
 		    setTimeout(function () { timeKeeper = false; }, 1100);
             
-		    if (playList.length < 1) { alert('Criteria yilded no songs'); return; }
+		    if (playList.length < 1) { alert('Criteria yilded no songs!'); return; }
 		    IsReady = true;
 
 		    if (!preLoad) SetPlaylistPosition(0);
@@ -123,7 +123,7 @@
         }
     }
 
-    //Loads the next song, and prefetches more if playlist is running out of items.
+    //Loads the next song.
     function Next() {
         if (IsReady) {
             var wp = IsPlaying;
