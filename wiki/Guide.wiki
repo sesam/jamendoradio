@@ -23,7 +23,7 @@ Three main keys are used for selecting music:
 
 _*Note:* These keys does not combine well. Combinations are mostly intended for ordering (like weekly/monthly/overall popularity/ratings/reviews etc.). The key name here is "order"._ See the [http://developer.jamendo.com/en/wiki/Musiclist2Api Jamendo API documentation] for more information about ordering.
 
-== Say what? ==
+=== Say what? ===
 So lets say you find an album that you want to add to a channel. E.g. 
 http://www.jamendo.com/en/album/55571
 
@@ -35,3 +35,8 @@ To include the newly found album in this selection set, I add the digits to the 
 “album_id=29114+29279+888+2007+53704+55571″).
 
 To add a new station, click add. Enter a name, i.e “Relaxing”. Then enter as subset string: “tag_idstr=relaxing+calm&order=ratingweek”.
+
+= Channel designer =
+New in v1.5 is the channel designer. It is a simple dialog that should help in the designing of channels. It contains rudimentary error checking, so it is harder to make mistakes. Also, it has all criteria keys, and all order values contained in drop downs.
+
+When entering values for the criteria, do not use any spaces, and separate each value by placing them on single rows.
