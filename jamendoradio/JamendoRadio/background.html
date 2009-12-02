@@ -36,7 +36,7 @@
     function LoadPlayListObject(subset, callBack, preLoad, config) {
         var url = "http://api.jamendo.com/get2/" + 
             "name+stream+album_name+album_url+album_image+artist_name+artist_url" + //Fields
-            "/track/json/track_album+album_artist/"; //Unit, format and explicit joins
+            "/track/json/track_album+album_tag+album_artist/"; //Unit, format and explicit joins
             
 		if(!config) { loop = false; url += "?n=5&nshuffle=500&streamencoding=ogg2&"; }//Default options (take five from a randomized set of 500, and we use ogg encoding)
 		else { loop = true; url += config; }
