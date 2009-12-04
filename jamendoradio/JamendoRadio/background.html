@@ -37,15 +37,21 @@
         var url = "http://api.jamendo.com/get2/" + 
             "name+stream+album_name+album_url+album_image+artist_name+artist_url" + //Fields
             "/track/json/track_album+album_tag+album_artist/"; //Unit, format and explicit joins
-            
-		if(!config) { loop = false; url += "?n=5&nshuffle=500&streamencoding=ogg2&"; }//Default options (take five from a randomized set of 500, and we use ogg encoding)
-		else { loop = true; url += config; }
-		
-		//We need to store the criteria, to enable prefetching playlist items.
+
+        //We need to store the criteria, to enable prefetching playlist items.
         if (!preLoad && !subset)
             currentSubset = "order=ratingmonth_desc";
         else if (!preLoad)
             currentSubset = subset;
+
+        if (!config) {
+            loop = false;
+            if (currentSubset.indexOf('album_id') > -1 || currentSubset.indexOf('artist_idstr') > -1 || currentSubset.indexOf('artist_id') > -1)
+                url += "?n=5&order=random&streamencoding=ogg2&";
+            else
+                url += "?n=5&nshuffle=500&streamencoding=ogg2&";
+        }
+        else { loop = true; url += config; }
 
         url += currentSubset;
 
