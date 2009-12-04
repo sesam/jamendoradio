@@ -80,7 +80,7 @@
             var set = "";
 
             if (newSet.value) set = newSet.value + "=" + newValues.value.replace(/\n/mg, '+');
-            if (newOrder.value) order = "order=" + newOrder.value;
+            if (newSet.selectedIndex < 2 && newOrder.value) order = "order=" + newOrder.value;
 
             var subset;
             if (set && order) set += "&";
@@ -160,7 +160,7 @@
                 <input id="newName" /></dd>
             <dt>Selection</dt>
             <dd>
-                <select id="newSet" onchange="newValues.disabled = this.selectedIndex == 0">
+                <select id="newSet" onchange="newValues.disabled = this.selectedIndex == 0; newOrder.disabled = this.selectedIndex > 1;">
                     <option value="">Everyting</option>
                     <option value="tag_idstr">Tag(s)</option>
                     <option value="artist_idstr">Artist(s)</option>
