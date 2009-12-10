@@ -1,0 +1,6 @@
+#summary Some predefined stations for you to enjoy.
+
+= Channels =
+|| Name || Subset string ||
+|| *Indie pop:* || {{{album_id=20784+7098+23755+43195+6339+56070+9604+38655+53847}}} ||
+|| *8Bit Madness:* || {{{tag_idstr=8bit+demoscene&order=ratingweek_desc}}} ||
