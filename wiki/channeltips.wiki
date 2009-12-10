@@ -1,4 +1,4 @@
-#summary Some predefined stations for you to enjoy.
+#summary Some channel suggestions for you to try out and enjoy.
 
 = Channels =
 || Name || Subset string ||
