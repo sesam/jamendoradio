@@ -1,4 +1,4 @@
-##Guide to Jamendo Radio.
+#summary Guide to Jamendo Radio.
 
 = Usage =
 
