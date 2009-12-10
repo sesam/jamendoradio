@@ -20,20 +20,22 @@
 
     //Check if the current song has ended, and advance playlist to next item if that is the case.
     setInterval(function() { if (IsPlaying && audio.ended) Next(); }, 250);
-	
-	chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
-		if(request.target) {
-			switch(request.target) {
-				case "manipulatePage": sendResponse({GoAhead:eval(localStorage["SiteIntegration"])}); return;
-				case "loadAlbumPlayList": LoadAlbum(request.data); break;
-				case "loadTrackPlayList": LoadTrack(request.data); break;
-				case "loadArtistRadio": LoadArtist(request.data); break;
-			}
-			sendResponse();
-		}
-		else 
-			sendResponse({});
-	});
+
+    chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+        if (request.target) {
+            switch (request.target) {
+                case "manipulatePage": sendResponse({ GoAhead: eval(localStorage["SiteIntegration"]) }); return;
+                case "loadAlbumPlayList": LoadAlbum(request.data); break;
+                case "loadTrackPlayList": LoadTrack(request.data); break;
+                case "loadArtistRadio": LoadArtist(request.data); break;
+                case "loadPlayList": LoadPlayList(request.data); break;
+                case "loadRadioPlayList": LoadRadio(request.data); break;
+            }
+            sendResponse();
+        }
+        else
+            sendResponse({});
+    });
     var test = "nej";
     chrome.browserAction.onClicked.addListener(function (tab) {
         test = "ja";
@@ -92,6 +94,12 @@
 	function LoadArtist(name) {
 		LoadPlayListObject("artist_idstr=" + name, Play);
 	}
+    function LoadRadio(id) {
+        LoadPlayListObject("radio_id=" + id, Play, false, "track_album+album_artist+radio_track_inradioplaylist/order=numradio_asc&");
+    }
+    function LoadPlayList(id) {
+        LoadPlayListObject("playlist_id=" + id, Play, false, "track_album+album_artist+playlist_track/?streamencoding=ogg2&order=numplaylist_asc&");
+    }
 	
     function SetPlaylistPosition(position) {
         CurrentPosition = position; CurrentData = playList[CurrentPosition];
