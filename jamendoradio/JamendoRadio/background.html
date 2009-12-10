@@ -105,10 +105,10 @@
 		    audio.src = CurrentData.stream;
 		    audio.volume = 1;
 			audio.load();
-			if (OnPositionChanged) OnPositionChanged(CurrentData);
 			AlbumImageLoaded = false;
+			if (OnPositionChanged) OnPositionChanged(CurrentData);
             var albumImage = document.createElement("img");
-            albumImage.onload = function () { setTimeout(function(){ AlbumImageLoaded = true; if (OnImageLoaded) OnImageLoaded(); }, 10000); }
+            albumImage.onload = function () { AlbumImageLoaded = true; if (OnImageLoaded) OnImageLoaded(); }
 			albumImage.src = CurrentData.album_image;
 		}
 		else Unload();
