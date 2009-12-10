@@ -4,6 +4,7 @@
     var IsReady;
     var CurrentData;
     var CurrentPosition;
+    var AlbumImageLoaded;
 
     //Position changed callback (this updates the gui in popup.html)
     var OnPositionChanged;
@@ -33,6 +34,10 @@
 		else 
 			sendResponse({});
 	});
+    var test = "nej";
+    chrome.browserAction.onClicked.addListener(function (tab) {
+        test = "ja";
+    });
 
     function LoadPlayListObject(subset, callBack, preLoad, config) {
 		//this is the url base. It defines the address, what fields, the base unit and the return format. These are mandatory for the proper operation of the extension.
@@ -101,9 +106,9 @@
 		    audio.volume = 1;
 			audio.load();
 			if (OnPositionChanged) OnPositionChanged(CurrentData);
-            
+			AlbumImageLoaded = false;
             var albumImage = document.createElement("img");
-            albumImage.onload = function () { if (OnImageLoaded) OnImageLoaded(); }
+            albumImage.onload = function () { setTimeout(function(){ AlbumImageLoaded = true; if (OnImageLoaded) OnImageLoaded(); }, 10000); }
 			albumImage.src = CurrentData.album_image;
 		}
 		else Unload();
@@ -161,6 +166,8 @@
         IsPlaying = false;
         CurrentData = { "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
         CurrentPosition = -1;
+
+        AlbumImageLoaded = true;
 
         if (OnPositionChanged)
             OnPositionChanged(CurrentData);
