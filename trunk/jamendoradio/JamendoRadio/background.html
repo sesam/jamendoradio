@@ -4,9 +4,10 @@
     var IsReady;
     var CurrentData;
     var CurrentPosition;
-    
+
     //Position changed callback (this updates the gui in popup.html)
     var OnPositionChanged;
+    var OnImageLoaded;
 
     //Internals
     var audio = new Audio();
@@ -66,7 +67,7 @@
 		req.open("GET", url, true);
 		req.onload = function () {
 		    playList = eval(req.responseText);
-		    setTimeout(function () { timeKeeper = false; }, 1100);
+		    setTimeout(function () { timeKeeper = false; }, 1100); //Release the timeKeeper
             
 		    if (playList.length < 1) { alert('Criteria yilded no songs!'); return; }
 		    IsReady = true;
@@ -99,11 +100,13 @@
 		    audio.src = CurrentData.stream;
 		    audio.volume = 1;
 			audio.load();
+			if (OnPositionChanged) OnPositionChanged(CurrentData);
+            
+            var albumImage = document.createElement("img");
+            albumImage.onload = function () { if (OnImageLoaded) OnImageLoaded(); }
+			albumImage.src = CurrentData.album_image;
 		}
 		else Unload();
-
-        if (OnPositionChanged)
-            OnPositionChanged(CurrentData);
     }
 	
     function Play() {
@@ -156,8 +159,14 @@
         playList = null;
         IsReady = false;
         IsPlaying = false;
-        CurrentData = null;
+        CurrentData = { "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
         CurrentPosition = -1;
+
+        if (OnPositionChanged)
+            OnPositionChanged(CurrentData);
+        if (OnImageLoaded)
+            OnImageLoaded(AlbumImage);
     }
+    Unload();
 </script>
 

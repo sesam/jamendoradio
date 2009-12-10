@@ -19,6 +19,7 @@
     <script type="text/javascript">
         var bp = chrome.extension.getBackgroundPage();
         bp.OnPositionChanged = loadPlayerInfo;
+        bp.OnImageLoaded = setImage;
 
         var commensePlayImmidiatly;
 
@@ -32,30 +33,24 @@
                 }
             }
 
-            if (bp.IsReady)
-                loadPlayerInfo(bp.CurrentData);
-			setTimeout(function() { document.getElementById("image").style.display = "block"; }, 150);
-        }
+            loadPlayerInfo();
+         }
 
-        function loadPlayerInfo(data) {
-            if (!data) Stop();
-        
-            var image = document.getElementById("image");
+        function loadPlayerInfo() {
             var name = document.getElementById("name");
             var artist_name = document.getElementById("artist_name");
             var album_name = document.getElementById("album_name");
+            
+            name.innerText = bp.CurrentData.name;
+            artist_name.innerText = bp.CurrentData.artist_name;
+            album_name.innerText = bp.CurrentData.album_name;
 
-            image.src = data.album_image;
-            name.innerText = data.name;
-            artist_name.innerText = data.artist_name;
-            album_name.innerText = data.album_name;
-
-            if (data.artist_url)
+            if (bp.CurrentData.artist_url)
                 artist_name.onclick = function() { chrome.windows.create({ "url": data.artist_url }); };
             else
                 artist_name.onclick = null;
 
-            if (data.album_url)
+            if (bp.CurrentData.album_url)
                 album_name.onclick = function() { chrome.windows.create({ "url": data.album_url }); };
             else
                 album_name.onclick = null;
@@ -88,7 +83,12 @@
             else
                 playPauseButton.className = "paused";
 
+            setImage();
+        }
 
+        function setImage() {
+            var i = document.getElementById("image");
+            i.src = bp.CurrentData.album_image;
         }
 
         function PlayPause(element) {
@@ -96,7 +96,6 @@
         }
         function Stop(element) {
             bp.Unload();
-            loadPlayerInfo({ "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" });
         }
         function Next(element) {
  
@@ -128,19 +127,16 @@
 			knob.style.top = offset + "px";
 			bp.setVolume(volume);
 		}
-
     </script>
 
 </head>
 <body onload="main();">
     <table>
         <tr>
-            <td rowspan="3" style="width:105px;height:100px;">
-                <img id="image" src="Images/splash.jpg" style="vertical-align: top; float: left; display:none;" />
+            <td id="container" rowspan="3" style="width:105px;height:100px;">
+                <img id="image" alt="" src="Images/splash.jpg" />
             </td>
-            <td>
-                <div id="name" style="font-size: 1.5em;color:#135ABB;">
-                    No radio loaded</div>
+            <td><div id="name" style="font-size: 1.5em;color:#135ABB;"></div>
             </td>
 			<td rowspan="4">
 				<div id="controls" class="disabled">
@@ -155,13 +151,11 @@
         </tr>
         <tr>
             <td>
-                <a id="album_name" class="empty">
-                    Please select a</a>
+                <a id="album_name" class="empty"></a></td>
         </tr>
         <tr>
             <td>
-                <a id="artist_name" class="empty">
-                    channel below...</a></td>
+                <a id="artist_name" class="empty"></a></td>
         </tr>
 		<tr>
 			<td colspan="3">
@@ -170,7 +164,5 @@
 			</td>
 		</tr>
     </table>
-	
-
 </body>
 </html>
