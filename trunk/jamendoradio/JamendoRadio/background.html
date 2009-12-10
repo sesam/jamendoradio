@@ -34,30 +34,32 @@
 	});
 
     function LoadPlayListObject(subset, callBack, preLoad, config) {
-        var url = "http://api.jamendo.com/get2/" + 
-            "name+stream+album_name+album_url+album_image+artist_name+artist_url"; //Unit, format and explicit joins
+		//this is the url base. It defines the address, what fields, the base unit and the return format. These are mandatory for the proper operation of the extension.
+        var url = "http://api.jamendo.com/get2/name+stream+album_name+album_url+album_image+artist_name+artist_url/track/json/";
 
-        //We need to store the criteria, to enable prefetching playlist items.
+        //We need to store the criteria globally, to enable prefetching playlist items.
         if (!preLoad && !subset)
-            currentSubset = "order=ratingmonth_desc";
+            currentSubset = "order=ratingmonth_desc"; //By default, pick songs from this months most popular.
         else if (!preLoad)
             currentSubset = subset;
-
+		
+		//Now lets build the query. First lets see if we have gotten a custom configuration...
         if (!config) {
-            loop = false;
+            loop = false; //We haven't. Set the extension to normal Radio behaviour. Then add joins and options, depending on whether the query uses albums, tags or artists or nothing, as base criteria.
             if (currentSubset.indexOf('album_id') > -1 || currentSubset.indexOf('artist_idstr') > -1 || currentSubset.indexOf('artist_id') > -1)
-                url += "/track/json/track_album+album_artist/?n=5&order=random&streamencoding=ogg2&";
+                url += "track_album+album_artist/?n=5&order=random&streamencoding=ogg2&";
             else
-                url += "/track/json/track_album+album_tag+album_artist/?n=5&nshuffle=500&streamencoding=ogg2&";
+                url += "track_album+album_tag+album_artist/?n=5&nshuffle=500&streamencoding=ogg2&"; 
         }
         else { 
-			loop = true; 
+			loop = true; //We have a custom configuration. The play list will not be re-loaded, but only looped when the end is reached.
 			url += config; 
 		}
 
+		//And lastly, lets append the actual criteria.
         url += currentSubset;
 
-        if (timeKeeper) return; //ignore spamming, conforms to API terms of use.
+        if (timeKeeper) return; //ignore spamming, conforms to Jamendo API terms of use.
         timeKeeper = true;
         var req = new XMLHttpRequest();
         
@@ -76,10 +78,10 @@
     }
 
 	function LoadAlbum(id) 	{
-	    LoadPlayListObject("album_id=" + id, Play, false, "/track/json/track_album+album_artist/?streamencoding=ogg2&order=numalbum_asc&");
+	    LoadPlayListObject("album_id=" + id, Play, false, "track_album/?streamencoding=ogg2&order=numalbum_asc&");
 	}
 	function LoadTrack(id) {
-		LoadPlayListObject("id=" + id, Play, false, "/track/json/?streamencoding=ogg2&");
+		LoadPlayListObject("id=" + id, Play, false, "?streamencoding=ogg2&");
 	}
 	function LoadArtist(name) {
 		LoadPlayListObject("artist_idstr=" + name, Play);
