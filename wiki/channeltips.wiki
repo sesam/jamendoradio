@@ -4,3 +4,5 @@
 || Name || Subset string ||
 || *Indie pop:* || {{{album_id=20784+7098+23755+43195+6339+56070+9604+38655+53847}}} ||
 || *8Bit Madness:* || {{{tag_idstr=8bit+demoscene&order=ratingweek_desc}}} ||
+
+_If you have additional channel tips, post them in the comments or mail them to me, and I'll add them to the table above._
