@@ -78,10 +78,10 @@
     }
 
 	function LoadAlbum(id) 	{
-	    LoadPlayListObject("album_id=" + id, Play, false, "track_album/?streamencoding=ogg2&order=numalbum_asc&");
+	    LoadPlayListObject("album_id=" + id, Play, false, "track_album+album_artist/?streamencoding=ogg2&order=numalbum_asc&");
 	}
 	function LoadTrack(id) {
-		LoadPlayListObject("id=" + id, Play, false, "?streamencoding=ogg2&");
+		LoadPlayListObject("id=" + id, Play, false, "track_album+album_artist/?streamencoding=ogg2&");
 	}
 	function LoadArtist(name) {
 		LoadPlayListObject("artist_idstr=" + name, Play);
