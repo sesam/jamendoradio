@@ -35,8 +35,7 @@
 
     function LoadPlayListObject(subset, callBack, preLoad, config) {
         var url = "http://api.jamendo.com/get2/" + 
-            "name+stream+album_name+album_url+album_image+artist_name+artist_url" + //Fields
-            "/track/json/track_album+album_tag+album_artist/"; //Unit, format and explicit joins
+            "name+stream+album_name+album_url+album_image+artist_name+artist_url"; //Unit, format and explicit joins
 
         //We need to store the criteria, to enable prefetching playlist items.
         if (!preLoad && !subset)
@@ -47,11 +46,14 @@
         if (!config) {
             loop = false;
             if (currentSubset.indexOf('album_id') > -1 || currentSubset.indexOf('artist_idstr') > -1 || currentSubset.indexOf('artist_id') > -1)
-                url += "?n=5&order=random&streamencoding=ogg2&";
+                url += "/track/json/track_album+album_artist/?n=5&order=random&streamencoding=ogg2&";
             else
-                url += "?n=5&nshuffle=500&streamencoding=ogg2&";
+                url += "/track/json/track_album+album_tag+album_artist/?n=5&nshuffle=500&streamencoding=ogg2&";
         }
-        else { loop = true; url += config; }
+        else { 
+			loop = true; 
+			url += config; 
+		}
 
         url += currentSubset;
 
@@ -74,10 +76,10 @@
     }
 
 	function LoadAlbum(id) 	{
-	    LoadPlayListObject("album_id=" + id, Play, false, "?streamencoding=ogg2&order=numalbum_asc&");
+	    LoadPlayListObject("album_id=" + id, Play, false, "/track/json/track_album+album_artist/?streamencoding=ogg2&order=numalbum_asc&");
 	}
 	function LoadTrack(id) {
-		LoadPlayListObject("id=" + id, Play, false, "?streamencoding=ogg2&");
+		LoadPlayListObject("id=" + id, Play, false, "/track/json/?streamencoding=ogg2&");
 	}
 	function LoadArtist(name) {
 		LoadPlayListObject("artist_idstr=" + name, Play);
