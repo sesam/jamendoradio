@@ -34,9 +34,12 @@
             }
 
             loadPlayerInfo();
+
          }
 
         function loadPlayerInfo() {
+            setImage();
+            
             var name = document.getElementById("name");
             var artist_name = document.getElementById("artist_name");
             var album_name = document.getElementById("album_name");
@@ -82,13 +85,16 @@
                 playPauseButton.className = "";
             else
                 playPauseButton.className = "paused";
-
-            setImage();
         }
 
         function setImage() {
             var i = document.getElementById("image");
-            i.src = bp.CurrentData.album_image;
+            if (bp.AlbumImageLoaded) {
+                i.src = bp.CurrentData.album_image;
+                i.className = "";
+            }
+            else
+                i.className = "disabled";
         }
 
         function PlayPause(element) {
@@ -133,8 +139,10 @@
 <body onload="main();">
     <table>
         <tr>
-            <td id="container" rowspan="3" style="width:105px;height:100px;">
-                <img id="image" alt="" src="Images/splash.jpg" />
+            <td id="container" rowspan="3">
+                <div  style="width:105px;height:100px;background:url('Images/ajax-loader.gif') no-repeat 35px 25px;">
+                    <img id="image" alt="" src="" />&nbsp;
+                </div>
             </td>
             <td><div id="name" style="font-size: 1.5em;color:#135ABB;"></div>
             </td>

@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JamendoRadio", "JamendoRadi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{4BA2B1BB-5EC1-43D2-90C6-E08DE961C13B}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\ajax-loader.gif = ..\..\..\Downloads\ajax-loader.gif
 		jamendoradio\JamendoRadio\Images\control_fastforward.png = jamendoradio\JamendoRadio\Images\control_fastforward.png
 		jamendoradio\JamendoRadio\Images\control_pause.png = jamendoradio\JamendoRadio\Images\control_pause.png
 		jamendoradio\JamendoRadio\Images\control_play.png = jamendoradio\JamendoRadio\Images\control_play.png
