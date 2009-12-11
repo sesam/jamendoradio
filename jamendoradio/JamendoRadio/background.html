@@ -36,10 +36,6 @@
         else
             sendResponse({});
     });
-    var test = "nej";
-    chrome.browserAction.onClicked.addListener(function (tab) {
-        test = "ja";
-    });
 
     function LoadPlayListObject(subset, callBack, preLoad, config) {
 		//this is the url base. It defines the address, what fields, the base unit and the return format. These are mandatory for the proper operation of the extension.
