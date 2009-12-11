@@ -49,12 +49,12 @@
             album_name.innerText = bp.CurrentData.album_name;
 
             if (bp.CurrentData.artist_url)
-                artist_name.onclick = function() { chrome.windows.create({ "url": data.artist_url }); };
+                artist_name.onclick = function() { chrome.tabs.create({ "url": bp.CurrentData.artist_url }); };
             else
                 artist_name.onclick = null;
 
             if (bp.CurrentData.album_url)
-                album_name.onclick = function() { chrome.windows.create({ "url": data.album_url }); };
+                album_name.onclick = function() { chrome.tabs.create({ "url": bp.CurrentData.album_url }); };
             else
                 album_name.onclick = null;
                 
