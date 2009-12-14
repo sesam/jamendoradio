@@ -12,6 +12,7 @@
         #next { background: url(Images/control_fastforward.png) no-repeat; }
 		#volume { cursor:hand; }
         .paused { background: url(Images/control_play.png) no-repeat !important; }
+		.looped { background: url(Images/control_rewind.png) no-repeat !important; }
         .disabled { display:none; }
         .empty { cursor:auto!important; text-decoration:none!important; }
     </style>
@@ -38,18 +39,23 @@
 			
             loadPlayerInfo();
          }
+		 
+		var userAlerted = false;
 		 function UpdateSubset(subset)
 		 {
 			if(subset.indexOf("/?") > -1) return subset;
 			var rxConfig = /[?&]?(\w+)=([\w+.]+)/g;
-			
+
 			var joins = "";
 			var config = "";
 			
 			var setting = rxConfig.exec(subset);
+			if(setting && !userAlerted) alert('The substring format has been updated to support playlist and user starred albums.\n\nI will try to convert your channels into the new format.');
 			
 			while(setting) 
 			{ 
+				userAlerted = true;
+				
 				if(setting[1] == "tag_idstr")
 					joins += "+album_tag/";
 					
@@ -76,13 +82,14 @@
 			$(elementName).animate({ marginLeft: 0 }, 2000, "", function() { if($(elementName).width() > 315) animateLeft(elementName); }); }, 550);
 		}
         function loadPlayerInfo() {
-			setImage();
+			if($("#image").attr("src") != bp.CurrentData.album_image) setImage();
 			            
             $("#name").html(bp.CurrentData.name).stop().css("margin-left", "0");
 			$("#artist_name").html(bp.CurrentData.artist_name).stop(true).css("margin-left", "0").toggleClass("empty", !bp.IsReady);            
 			$("#album_name").html(bp.CurrentData.album_name).stop(true).css("margin-left", "0").toggleClass("empty", !bp.IsReady);
 			
 			$("#play").toggleClass("paused", !bp.IsPlaying);
+			$("#stop").toggleClass("looped", bp.loop);
 			
 			if($("#name").width() > 315) animateLeft("#name");
 			if($("#artist_name").width() > 315) animateLeft("#artist_name");
@@ -101,6 +108,12 @@
             if (bp.IsReady) {
 				$("#controls").show();
 				
+				$("#play").click(function() { bp.Pause(); $("#play").toggleClass("paused", !bp.IsPlaying); });
+				if(bp.loop) $("#stop").click(bp.Back);
+				else $("#stop").click(function() { bp.Unload(false); });
+				$("#next").click(bp.Next);
+				
+				
 				var knob = document.getElementById("volumeknob"); var slide = document.getElementById("volume"); 
 				knob.style.top = slide.offsetHeight - (bp.volume * slide.offsetHeight) + "px";
             }
@@ -115,7 +128,7 @@
 		}
 		
 		function setImage() {
-            if (bp.AlbumImageLoaded && $("#image").attr("src") != bp.CurrentData.album_image)
+            if (bp.AlbumImageLoaded)
 				$("#image").fadeOut("slow", function() { $("#image").attr("src", bp.CurrentData.album_image).fadeIn("fast"); });
             else {
                 $("#image").fadeOut("slow");
@@ -123,16 +136,6 @@
 			}
         }
 
-        function PlayPause(element) {
-            bp.Pause(element);
-        }
-        function Stop(element) {
-            bp.Unload();
-        }
-        function Next(element) {
-             bp.Next();
-        }
-        
 		function LoadStation(subset) {
 			bp.PopulatePlaylist(subset, true, bp.Play, false);
         }
@@ -175,9 +178,9 @@
             </td>
 			<td rowspan="4" style="min-width:16px;">
 				<div id="controls" class="disabled">
-					<a id="play" class="paused" onclick="PlayPause(this);">&nbsp;</a>
-					<a id="stop" onclick="Stop(this);">&nbsp;</a>
-					<a id="next" onclick="Next(this);">&nbsp;</a>
+					<a id="play" class="paused">&nbsp;</a>
+					<a id="stop">&nbsp;</a>
+					<a id="next">&nbsp;</a>
 					<div id="volume" onmousedown="SetVolume(this);" style="background:url(Images/volume_bg.png) repeat-y;width:16px;height:50px;">
 						<img id="volumeknob" src="Images/control_volume.png" style="position:relative;top:25px;" />
 					</div>

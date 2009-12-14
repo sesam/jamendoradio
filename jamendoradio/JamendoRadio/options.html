@@ -63,6 +63,7 @@
             nameCell.appendChild(nameEditor);
             subsetCell.appendChild(subsetEditor);
 
+			newRow.disabled = "disabled";
 
             newRow.appendChild(controlCell);
             newRow.appendChild(nameCell);
@@ -79,7 +80,7 @@
             if (newSet.value && !newValues.value) { alert("Please specify criteria"); return; }
             if (!newName.value) { alert("Please pick a name for this station"); return; }
             if (newValues.value && newValues.value.indexOf(' ') > -1) { alert("Criteria may not contain spaces.\nSeparate them by placing one on each row..."); return; }
-			
+			if (newSet.value == "user" && newValues.value.indexOf("\n") > -1 ) { alert("You may only fetch albums from a single user."); return; }
 			var config = "";
 						
 			switch (newSet.value) {
@@ -178,6 +179,7 @@
     <div id="designer" style="border: 1px solid black; position: absolute; top: 30%;
         padding: 10px; left: 50%; width: 300px; margin-left: -150px; background: white;"
         class="hidden">
+		<h2 style="margin:0;">Channel Designer</h2>
         <dl>
             <dt>Name</dt>
             <dd>
@@ -216,7 +218,7 @@
             <button id="clearDesigner" onclick="newName.value = newSet.value = newValues.value = newOrder.value = '';newValues.disabled = true">
                 Clear</button>
             <button onclick="AddStation();">
-                Add station</button>
+                Add channel</button>
             <button onclick="designer.className='hidden'">
                 Cancel</button>
         </div>

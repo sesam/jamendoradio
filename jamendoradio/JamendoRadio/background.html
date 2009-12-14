@@ -69,7 +69,7 @@
         req.onload = function () {
             playList = eval(req.responseText);
 
-            if (playList.length < 1) { alert('Criteria yilded no songs!'); return; }
+            if (playList.length < 1) { alert('Criteria yilded no songs!'); Unload(); return; }
             IsReady = true;
 
             if (!prefetch) SetPlaylistPosition(0);
@@ -77,26 +77,22 @@
         };
 		req.send(null);
     }
-
 	function LoadTrack(id) {
 	    var settings = "/?id=" + id;
 	    PopulatePlaylist(settings, false, Play, false);
 	}
-
 	function LoadArtist(name) {
 	    var settings = "/?order=random&";
 	    settings += "artist_idstr=" + name;
 
 	    PopulatePlaylist(settings, true, Play, false);
 	}
-	
 	function LoadTags(name) {
 	    var settings = "+album_tag/?order=random&";
 	    settings += "tag_idstr=" + name;
 
 	    PopulatePlaylist(settings, true, Play, false);
 	}
-	
     function LoadAlbum(id, asRadio) {
         var settings = "/?order=";
         if (asRadio) settings += "random&";
@@ -105,7 +101,6 @@
 
         PopulatePlaylist(settings, asRadio, Play, false);
 	}
-
 	function LoadJamRadio(id, asRadio) {
 	    var settings = "+radio_track_inradioplaylist/?order=";
 	    if (asRadio) settings += "random&";
@@ -128,7 +123,6 @@
 		
         PopulatePlaylist(settings, true, Play, false);
     }
-	
 	function LoadStation(config) {
 		PopulatePlaylist(config, true, Play, false);
 	}
@@ -139,7 +133,7 @@
         
         if (CurrentPosition >= (playList.length - 1)) { //Last song in playlist.
             CurrentPosition = -1;
-            if (!loop) PopulatePlaylist(null, null, null, true);//LoadPlayListObject(null, null, true) //If not looping a fixed playlist, prefetch new songs from jamendo.
+            if (!loop) PopulatePlaylist(null, null, null, true);//If not looping a fixed playlist, prefetch new songs from jamendo.
         }
 		
 		if(CurrentData) {
@@ -149,14 +143,14 @@
 			
 			if(CurrentData.album_image != oldAlbumImage) {
 				AlbumImageLoaded = false;
-				if (OnPositionChanged) OnPositionChanged(CurrentData);
+				if (OnPositionChanged) OnPositionChanged();
 	            var albumImage = document.createElement("img");
 	            albumImage.onload = function () { AlbumImageLoaded = true; if (OnImageLoaded) OnImageLoaded(); }
 				albumImage.src = CurrentData.album_image;
 			}
 			else {
 				AlbumImageLoaded = true;
-				if (OnPositionChanged) OnPositionChanged(CurrentData);
+				if (OnPositionChanged) OnPositionChanged();
 			}
 		}
 		else Unload();
@@ -170,21 +164,14 @@
         }
     }
 
-    //Toggles play pause, and can update a passed along elements css class.
-    function Pause(element) {
+    //Toggles play pause
+    function Pause() {
         if (IsReady) {
             if (audio.paused)
                 Play();
             else {
                 audio.pause(); 
                 IsPlaying = false;
-            }
-
-            if (element) {
-                if (audio.paused)
-                    element.className = "paused";
-                else
-                    element.className = "";
             }
         }
     }
@@ -199,7 +186,11 @@
     function Back() {
         if (IsReady && loop) {
             var newPosition = 0;
-            if (CurrentPosition == 0) newPosition = playList.length - 1; else newPosition = CurrentPosition - 1;
+			if (playList.length == 1) SetPlaylistPosition(newPosition); 
+            else if (CurrentPosition == -1) newPosition = playList.length - 2; //Playing the last song...
+			else if (CurrentPosition == 0) newPosition = playList.length - 1;  //Playing the first song...
+			else newPosition = CurrentPosition - 1;
+			
             SetPlaylistPosition(newPosition);
             if (IsPlaying) Play();
         }
