@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Jamendo Radio Configuration</title>
+	<script src="jquery.js"></script>
     <script type="text/javascript">
         function save_options() {
             var settingsTable = document.getElementById("settingsTable");
@@ -19,7 +20,9 @@
 
             localStorage["Stations"] = JSON.stringify(options);
             localStorage["SiteIntegration"] = JSON.stringify(document.getElementById("pageIntegration").checked);
-        }
+            localStorage["SkipDefault"] = JSON.stringify(document.getElementById("skipDefault").checked);
+		}
+		
         function restore_options() {
             var stations = eval(localStorage["Stations"]);
             if (!stations || stations.length == 0) { populateDefault(); }
@@ -29,11 +32,12 @@
             }
 
             document.getElementById("pageIntegration").checked = eval(localStorage["SiteIntegration"]);
+			document.getElementById("skipDefault").checked = eval(localStorage["SkipDefault"]);
         }
         function populateDefault() {
             AddRow("Rock", "+album_tag/?tag_idstr=rock&order=ratingweek_desc");
             AddRow("Piano", "/?order=random&album_id=29114+29279+888+2007+53704+55571+56448");
-            AddRow("Psyrance", "/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six");
+            AddRow("Psytrance", "/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six");
         }
 
         function AddRow(name, subset) {
@@ -106,7 +110,7 @@
 
             designer.className = 'hidden';
         }
-    </script>
+	</script>
     <style type="text/css">
         thead tr
         {
@@ -146,7 +150,9 @@
     <h1>
         General settings</h1>
     <input type="checkbox" id="pageIntegration" style="width: 75px;" />Integrate with
-    jamendo.com
+    jamendo.com<br />
+	<input type="checkbox" id="skipDefault" style="width: 75px;" />Don't add the "Default" channel.<br />
+	
     <h1>
         Channel setup</h1>
     <table style="width: 100%;">
