@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JamendoRadio", "JamendoRadi
 		jamendoradio\JamendoRadio\background.html = jamendoradio\JamendoRadio\background.html
 		jamendoradio\JamendoRadio.crx = jamendoradio\JamendoRadio.crx
 		jamendoradio\JamendoRadio\JamendoRadio.js = jamendoradio\JamendoRadio\JamendoRadio.js
+		jamendoradio\JamendoRadio\jquery.js = jamendoradio\JamendoRadio\jquery.js
 		jamendoradio\JamendoRadio\manifest.json = jamendoradio\JamendoRadio\manifest.json
 		jamendoradio\JamendoRadio\options.html = jamendoradio\JamendoRadio\options.html
 		jamendoradio\JamendoRadio\popup.html = jamendoradio\JamendoRadio\popup.html

@@ -31,9 +31,9 @@
             document.getElementById("pageIntegration").checked = eval(localStorage["SiteIntegration"]);
         }
         function populateDefault() {
-            AddRow("Rock", "tag_idstr=rock");
-            AddRow("Piano", "album_id=29114+29279+888+2007+53704+55571+56448");
-            AddRow("Trance", "artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six");
+            AddRow("Rock", "+album_tag/?tag_idstr=rock&order=ratingweek_desc");
+            AddRow("Piano", "/?order=random&album_id=29114+29279+888+2007+53704+55571+56448");
+            AddRow("Psyrance", "/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six");
         }
 
         function AddRow(name, subset) {
@@ -75,16 +75,34 @@
             if (newSet.value && !newValues.value) { alert("Please specify criteria"); return; }
             if (!newName.value) { alert("Please pick a name for this station"); return; }
             if (newValues.value && newValues.value.indexOf(' ') > -1) { alert("Criteria may not contain spaces.\nSeparate them by placing one on each row..."); return; }
-
-            var order = "";
-            var set = "";
-
-            if (newSet.value) set = newSet.value + "=" + newValues.value.replace(/\n/mg, '+');
-            if (newSet.selectedIndex < 2 && newOrder.value) order = "order=" + newOrder.value;
-
-            var subset;
-            if (set && order) set += "&";
-            AddRow(newName.value, set + order);
+			
+			var config = "";
+						
+			switch (newSet.value) {
+				case "tag":
+					config = "+album_tag/?tag_idstr=" + newValues.value.replace(/\n/mg, '+');
+					if(newOrder.value) config += "&order=" + newOrder.value;
+					break;
+				case "artist":
+					config = "/?order=random&artist_idstr=" + newValues.value.replace(/\n/mg, '+');
+					break;
+				case "album":
+					config = "/?order=random&album_id=" + newValues.value.replace(/\n/mg, '+');
+					break;
+				case "playlist":
+					config = "+playlist_track/?order=random&playlist_id=" + newValues.value.replace(/\n/mg, '+');
+					break;
+				case "jamradio":
+					config = "+radio_track_inradioplaylist/?order=random&radio_id=" + newValues.value.replace(/\n/mg, '+');
+					break;
+				case "user":
+					config = "+album_user_starred/?order=random&user_idstr=" + newValues.value.replace(/\n/mg, '+');
+					break;
+				default:
+					config = "/?order=" + newOrder.value;
+			}
+			
+            AddRow(newName.value, config);
 
             designer.className = 'hidden';
         }
@@ -162,9 +180,12 @@
             <dd>
                 <select id="newSet" onchange="newValues.disabled = this.selectedIndex == 0; newOrder.disabled = this.selectedIndex > 1;">
                     <option value="">Everyting</option>
-                    <option value="tag_idstr">Tag(s)</option>
-                    <option value="artist_idstr">Artist(s)</option>
-                    <option value="album_id">Album(s)</option>
+                    <option value="tag">Tag(s)</option>
+                    <option value="artist">Artist(s)</option>
+                    <option value="album">Album(s)</option>
+					<option value="playlist">Playlist(s)</option>
+					<option value="jamradio">JamRadio(s)</option>
+					<option value="user">User starred albums</option>
                 </select>
             </dd>
             <dt>Criteria</dt>

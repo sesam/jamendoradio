@@ -1,11 +1,13 @@
-<script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<script src="jquery.js" />
+<script type="text/javascript">
     //State variables
     var IsPlaying;
     var IsReady;
     var CurrentData;
     var CurrentPosition;
     var AlbumImageLoaded;
-
     //Position changed callback (this updates the gui in popup.html)
     var OnPositionChanged;
     var OnImageLoaded;
@@ -13,10 +15,12 @@
     //Internals
     var audio = new Audio();
     var playList;
-    var currentSubset;
+    var currentAPICall;
 	var loop;
 	var timeKeeper;
 	var volume = 1;
+	
+	var test;
 
     //Check if the current song has ended, and advance playlist to next item if that is the case.
     setInterval(function() { if (IsPlaying && audio.ended) Next(); }, 250);
@@ -37,72 +41,104 @@
             sendResponse({});
     });
 
-    function LoadPlayListObject(subset, callBack, preLoad, config) {
-		//this is the url base. It defines the address, what fields, the base unit and the return format. These are mandatory for the proper operation of the extension.
-        var url = "http://api.jamendo.com/get2/name+stream+album_name+album_url+album_image+artist_name+artist_url/track/json/";
+    function PopulatePlaylist(settings, asRadio, onLoadCallback, prefetch) {
+        var url;
+		console.log("Entereing method: PopulatePlaylist");
+        if (!prefetch) {
+			Unload(true);
+			if (!settings) settings = "/?order=ratingmonth_desc";
+            url = "http://api.jamendo.com/get2/name+stream+album_name+album_url+album_image+artist_name+artist_url/track/json/track_album+album_artist" + settings;
+			url += "&streamencoding=ogg2";
+			
+            if (asRadio) {
+                loop = false;
+				url += "&n=5";
+				if(url.indexOf("order=random") == -1)
+					url += "&nshuffle=500";
+                currentAPICall = url;
+            } else loop = true;
+        } else url = currentAPICall;
+		console.log("url: " + url);
 
-        //We need to store the criteria globally, to enable prefetching playlist items.
-        if (!preLoad && !subset)
-            currentSubset = "order=ratingmonth_desc"; //By default, pick songs from this months most popular.
-        else if (!preLoad)
-            currentSubset = subset;
+        if (timeKeeper) return; //Prevent spamming
+        timeKeeper = setTimeout(function () { timeKeeper = null; }, 1500);
 		
-		//Now lets build the query. First lets see if we have gotten a custom configuration...
-        if (!config) {
-            loop = false; //We haven't. Set the extension to normal Radio behaviour. Then add joins and options, depending on whether the query uses albums, tags or artists or nothing, as base criteria.
-            if (currentSubset.indexOf('album_id') > -1 || currentSubset.indexOf('artist_idstr') > -1 || currentSubset.indexOf('artist_id') > -1)
-                url += "track_album+album_artist/?n=5&order=random&streamencoding=ogg2&";
-            else
-                url += "track_album+album_tag+album_artist/?n=5&nshuffle=500&streamencoding=ogg2&"; 
-        }
-        else { 
-			loop = true; //We have a custom configuration. The play list will not be re-loaded, but only looped when the end is reached.
-			url += config; 
-		}
-
-		//And lastly, lets append the actual criteria.
-        url += currentSubset;
-
-        if (timeKeeper) return; //ignore spamming, conforms to Jamendo API terms of use.
-        timeKeeper = true;
+		console.log("Making request.");
         var req = new XMLHttpRequest();
-        
-		req.open("GET", url, true);
-		req.onload = function () {
-		    playList = eval(req.responseText);
-		    setTimeout(function () { timeKeeper = false; }, 1100); //Release the timeKeeper
-            
-		    if (playList.length < 1) { alert('Criteria yilded no songs!'); return; }
-		    IsReady = true;
+        req.open("GET", url, true);
+        req.onload = function () {
+            playList = eval(req.responseText);
 
-		    if (!preLoad) SetPlaylistPosition(0);
-		    if (callBack) callBack(playList);
-		};
-        req.send(null);
+            if (playList.length < 1) { alert('Criteria yilded no songs!'); return; }
+            IsReady = true;
+
+            if (!prefetch) SetPlaylistPosition(0);
+            if (onLoadCallback) onLoadCallback();
+        };
+		req.send(null);
     }
 
-	function LoadAlbum(id) 	{
-	    LoadPlayListObject("album_id=" + id, Play, false, "track_album+album_artist/?streamencoding=ogg2&order=numalbum_asc&");
-	}
 	function LoadTrack(id) {
-		LoadPlayListObject("id=" + id, Play, false, "track_album+album_artist/?streamencoding=ogg2&");
+	    var settings = "/?id=" + id;
+	    PopulatePlaylist(settings, false, Play, false);
 	}
+
 	function LoadArtist(name) {
-		LoadPlayListObject("artist_idstr=" + name, Play);
+	    var settings = "/?order=random&";
+	    settings += "artist_idstr=" + name;
+
+	    PopulatePlaylist(settings, true, Play, false);
 	}
-    function LoadRadio(id) {
-        LoadPlayListObject("radio_id=" + id, Play, false, "track_album+album_artist+radio_track_inradioplaylist/order=numradio_asc&");
+	
+	function LoadTags(name) {
+	    var settings = "+album_tag/?order=random&";
+	    settings += "tag_idstr=" + name;
+
+	    PopulatePlaylist(settings, true, Play, false);
+	}
+	
+    function LoadAlbum(id, asRadio) {
+        var settings = "/?order=";
+        if (asRadio) settings += "random&";
+        else settings += "numalbum_asc&";
+        settings += "album_id=" + id;
+
+        PopulatePlaylist(settings, asRadio, Play, false);
+	}
+
+	function LoadJamRadio(id, asRadio) {
+	    var settings = "+radio_track_inradioplaylist/?order=";
+	    if (asRadio) settings += "random&";
+	    else settings += "numradio_asc&";
+	    settings += "radio_id=" + id;
+
+	    PopulatePlaylist(settings, asRadio, Play, false);
     }
-    function LoadPlayList(id) {
-        LoadPlayListObject("playlist_id=" + id, Play, false, "track_album+album_artist+playlist_track/?streamencoding=ogg2&order=numplaylist_asc&");
+    function LoadPlayList(id, asRadio) {
+        var settings = "+playlist_track/?order=";
+        if (asRadio) settings += "random&";
+        else settings += "numplaylist_asc&";
+        settings += "playlist_id=" + id;
+
+        PopulatePlaylist(settings, asRadio, Play, false);
     }
+    function LoadUserStarred(user) {
+        var settings = "+album_user_starred/?order=random&";
+        settings += "user_idstr=" + user;
+		
+        PopulatePlaylist(settings, true, Play, false);
+    }
+	
+	function LoadStation(config) {
+		PopulatePlaylist(config, true, Play, false);
+	}
 	
     function SetPlaylistPosition(position) {
         CurrentPosition = position; CurrentData = playList[CurrentPosition];
         
         if (CurrentPosition >= (playList.length - 1)) { //Last song in playlist.
             CurrentPosition = -1;
-            if (!loop) LoadPlayListObject(null, null, true) //If not looping a fixed playlist, prefetch new songs from jamendo.
+            if (!loop) PopulatePlaylist(null, null, null, true);//LoadPlayListObject(null, null, true) //If not looping a fixed playlist, prefetch new songs from jamendo.
         }
 		
 		if(CurrentData) {
@@ -148,10 +184,18 @@
     //Loads the next song.
     function Next() {
         if (IsReady) {
-            var wp = IsPlaying;
             SetPlaylistPosition(CurrentPosition + 1);
-            if (wp) Play();
+            if (IsPlaying) Play();
         }
+    }
+    function Back() {
+        if (IsReady && loop) {
+            var newPosition = 0;
+            if (CurrentPosition == 0) newPosition = playList.length - 1; else newPosition = CurrentPosition - 1;
+            SetPlaylistPosition(newPosition);
+            if (IsPlaying) Play();
+        }
+        
     }
 
 	//Set volume
@@ -162,20 +206,26 @@
 
 	
     //Stops playing and remove current playlist.
-    function Unload() {
+    function Unload(whileLoading) {
         audio.src = "";
         audio.load();
         playList = null;
+		currentAPICall = "";
         IsReady = false;
         IsPlaying = false;
-        CurrentData = { "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
+		if(whileLoading) {
+			CurrentData = { "name": "Radio loading...", "album_name": "Please wait while", "artist_name": "I fetch some songs.", "album_image": "" };
+			AlbumImageLoaded = false;
+		}
+		else {
+			CurrentData = { "name": "No radio loaded but this is a really long loooong title lest see if we can make it scroll", "album_name": "Please select a but this is a really long loooong title lest see if we can make it scroll", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
+			AlbumImageLoaded = true;
+		}
         CurrentPosition = -1;
-
-        AlbumImageLoaded = true;
 
         if (OnPositionChanged)
             OnPositionChanged(CurrentData);
     }
     Unload();
 </script>
-
+</head><body></body></html>
