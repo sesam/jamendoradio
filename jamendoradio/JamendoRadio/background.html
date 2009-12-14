@@ -33,7 +33,7 @@
                 case "loadTrackPlayList": LoadTrack(request.data); break;
                 case "loadArtistRadio": LoadArtist(request.data); break;
                 case "loadPlayList": LoadPlayList(request.data); break;
-                case "loadRadioPlayList": LoadRadio(request.data); break;
+                case "loadRadioPlayList": LoadJamRadio(request.data); break;
             }
             sendResponse();
         }
@@ -134,6 +134,7 @@
 	}
 	
     function SetPlaylistPosition(position) {
+		var oldAlbumImage = CurrentData.album_image;
         CurrentPosition = position; CurrentData = playList[CurrentPosition];
         
         if (CurrentPosition >= (playList.length - 1)) { //Last song in playlist.
@@ -145,11 +146,18 @@
 		    audio.src = CurrentData.stream;
 		    audio.volume = 1;
 			audio.load();
-			AlbumImageLoaded = false;
-			if (OnPositionChanged) OnPositionChanged(CurrentData);
-            var albumImage = document.createElement("img");
-            albumImage.onload = function () { AlbumImageLoaded = true; if (OnImageLoaded) OnImageLoaded(); }
-			albumImage.src = CurrentData.album_image;
+			
+			if(CurrentData.album_image != oldAlbumImage) {
+				AlbumImageLoaded = false;
+				if (OnPositionChanged) OnPositionChanged(CurrentData);
+	            var albumImage = document.createElement("img");
+	            albumImage.onload = function () { AlbumImageLoaded = true; if (OnImageLoaded) OnImageLoaded(); }
+				albumImage.src = CurrentData.album_image;
+			}
+			else {
+				AlbumImageLoaded = true;
+				if (OnPositionChanged) OnPositionChanged(CurrentData);
+			}
 		}
 		else Unload();
     }
@@ -195,7 +203,6 @@
             SetPlaylistPosition(newPosition);
             if (IsPlaying) Play();
         }
-        
     }
 
 	//Set volume
@@ -218,7 +225,7 @@
 			AlbumImageLoaded = false;
 		}
 		else {
-			CurrentData = { "name": "No radio loaded but this is a really long loooong title lest see if we can make it scroll", "album_name": "Please select a but this is a really long loooong title lest see if we can make it scroll", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
+			CurrentData = { "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
 			AlbumImageLoaded = true;
 		}
         CurrentPosition = -1;
