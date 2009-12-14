@@ -1,10 +1,9 @@
 <html>
 <head>
     <style type="text/css">
-        table { white-space: nowrap; } td { vertical-align:top; }
-        a { margin-right: 10px; cursor:hand; text-decoration:underline;color:#999; }
-		#debug { width: 400px; }
-        #stationContainer { text-align:center; }
+        table { white-space: nowrap; } td { vertical-align:top; max-width:375px; overflow:hidden;}
+        a { margin-right: 10px; cursor:hand; text-decoration:underline;color:#999; display:inline; }
+        #stationContainer { text-align:center;  }
         #controls { vertical-align: top; float: right; }
         #controls a { width: 16px; display:block; height: 16px; margin-bottom:5px; text-decoration:none!important; }
         #play { background: url(Images/control_pause.png) no-repeat; }
@@ -15,16 +14,15 @@
         .disabled { display:none; }
         .empty { cursor:auto!important; text-decoration:none!important; }
     </style>
-
+	<script src="jquery.js" />
     <script type="text/javascript">
         var bp = chrome.extension.getBackgroundPage();
         bp.OnPositionChanged = loadPlayerInfo;
         bp.OnImageLoaded = setImage;
 
-        var commensePlayImmidiatly;
-
+		 
         function main() {
-            stations.appendChild(getStationLink("Default", ""));
+			stations.appendChild(getStationLink("Default", ""));
 
             var storedStations = eval(localStorage["Stations"]);
             if (storedStations) {
@@ -34,19 +32,31 @@
             }
 
             loadPlayerInfo();
-
          }
-
+		function animateLeft(elementName) {
+			var distance = $(elementName).width() - 375;
+			var time = distance * 30;
+			$(elementName).animate({ marginLeft: distance * -1 }, time, "swing", function() { animateRight(elementName); });
+		}
+		function animateRight(elementName) {
+			var distance = $(elementName).width() - 375;
+			var time = distance * 30;
+			$(elementName).animate({ marginLeft: 0 }, time, "swing", function() { if($(elementName).width() > 375) animateLeft(elementName); });
+		}
         function loadPlayerInfo() {
-            setImage();
+			setImage();
             
             var name = document.getElementById("name");
             var artist_name = document.getElementById("artist_name");
             var album_name = document.getElementById("album_name");
             
-            name.innerText = bp.CurrentData.name;
-            artist_name.innerText = bp.CurrentData.artist_name;
-            album_name.innerText = bp.CurrentData.album_name;
+            $("#name").html(bp.CurrentData.name);
+			$("#artist_name").html(bp.CurrentData.artist_name);            
+			$("#album_name").html(bp.CurrentData.album_name);
+			
+			if($("#name").width() > 375) animateLeft("#name");
+			if($("#artist_name").width() > 375) animateLeft("#artist_name");
+			if($("#album_name").width() > 375) animateLeft("#album_name");
 
             if (bp.CurrentData.artist_url)
                 artist_name.onclick = function() { chrome.tabs.create({ "url": bp.CurrentData.artist_url }); };
@@ -57,8 +67,7 @@
                 album_name.onclick = function() { chrome.tabs.create({ "url": bp.CurrentData.album_url }); };
             else
                 album_name.onclick = null;
-                
-
+				
             var controls = document.getElementById("controls");
 
             if (bp.IsReady) {
@@ -76,16 +85,11 @@
             }
 
             var playPauseButton = document.getElementById("play");
-            if (commensePlayImmidiatly) {
-                playPauseButton.className = "";
-                bp.Play();            
-                commensePlayImmidiatly = false;
-            }
-            else if (bp.IsPlaying)
+            if (bp.IsPlaying)
                 playPauseButton.className = "";
             else
                 playPauseButton.className = "paused";
-        }
+		}
 
         function setImage() {
             var i = document.getElementById("image");
@@ -98,19 +102,17 @@
         }
 
         function PlayPause(element) {
-            bp.Pause(element)
+            bp.Pause(element);
         }
         function Stop(element) {
             bp.Unload();
         }
         function Next(element) {
- 
-            bp.Next();
+             bp.Next();
         }
         
 		function LoadStation(subset) {
-            commensePlayImmidiatly = true;
-            bp.LoadPlayListObject(subset);
+			bp.PopulatePlaylist(subset, true, bp.Play, false);
         }
 
         function getStationLink(name, subset) {
@@ -133,18 +135,22 @@
 			knob.style.top = offset + "px";
 			bp.setVolume(volume);
 		}
+				
+		$(document).ready(function(){
+			// Your code here
+			main();
+		});
     </script>
-
 </head>
-<body onload="main();">
-    <table>
+<body>
+    <table cellspacing="0" cellpadding="0" id="player">
         <tr>
-            <td id="container" rowspan="3">
-                <div  style="width:105px;height:100px;background:url('Images/ajax-loader.gif') no-repeat 25px 15px;">
+            <td id="container" rowspan="3" style="width:105px;">
+                <div style="height:100px;background:url('Images/ajax-loader.gif') no-repeat 25px 15px;">
                     <img id="image" alt="" src="" />&nbsp;
                 </div>
             </td>
-            <td><div id="name" style="font-size: 1.5em;color:#135ABB;"></div>
+            <td><div id="name" style="font-size: 1.5em;color:#135ABB;display:inline;"></div>
             </td>
 			<td rowspan="4">
 				<div id="controls" class="disabled">
