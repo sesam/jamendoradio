@@ -1,36 +1,38 @@
 <html>
 <head>
     <title>Jamendo Radio Configuration</title>
-	<script src="Theme/jquery-1.3.2.min.js"></script>
-	<script src="Theme/jquery-ui-1.7.2.custom.min.js"></script>
+
+    <script src="Theme/jquery-1.3.2.min.js"></script>
+
+    <script src="Theme/jquery-ui-1.7.2.custom.min.js"></script>
+
     <script type="text/javascript">
-        function save_options() {
-            var settingsTable = document.getElementById("settingsTable");
+        function save_channels() {
             var options = new Array();
-			$("tbody > tr").each(function() { options[options.length] = { "Name":this.children[1].children[0].value, "Subset": this.children[2].children[0].value }; });
+			$(".channelRow").each(function() { options[options.length] = { "Name":this.children[1].children[0].value, "Subset": this.children[3].children[0].value }; });
 			
             localStorage["Stations"] = JSON.stringify(options);
-            localStorage["SiteIntegration"] = JSON.stringify(document.getElementById("pageIntegration").checked);
+		}
+		
+		function restore_channels() {
+            $(".channel").remove();
+			
+			var stations = eval(localStorage["Stations"]);
+			for (i = 0; i < stations.length; i++) {
+                AddChannel(stations[i].Name, stations[i].Subset);
+            }		
+		}
+		
+		function save_options() {
+			localStorage["SiteIntegration"] = JSON.stringify(document.getElementById("pageIntegration").checked);
             localStorage["SkipDefault"] = JSON.stringify(document.getElementById("skipDefault").checked);
 		}
 		
         function restore_options() {
-            var stations = eval(localStorage["Stations"]);
-            if (!stations || stations.length == 0) { populateDefault(); }
-
-            for (i = 0; i < stations.length; i++) {
-                AddChannel(stations[i].Name, stations[i].Subset);
-            }
-
             document.getElementById("pageIntegration").checked = eval(localStorage["SiteIntegration"]);
 			document.getElementById("skipDefault").checked = eval(localStorage["SkipDefault"]);
         }
-        function populateDefault() {
-            AddChannel("Rock", "+album_tag/?tag_idstr=rock&order=ratingweek_desc");
-            AddChannel("Piano", "/?order=random&album_id=29114+29279+888+2007+53704+55571+56448");
-            AddChannel("Psytrance", "/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six");
-        }
-		
+
 		function sformat(inString, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) {
 			return inString.replace(/{(\d)}/g, function(m) { 
 				switch(m) {
@@ -50,10 +52,10 @@
 		}
 		
 		function AddChannel(name, config) {
-			var ident = "channel_" + $("#channels").children().length;
+			var ident = "channel_" + new Date().getTime();
 			
 			var newHTML = "<li id='{0}' class='ui-state-default channel'>" +
-				"<table><tr><td class='move'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span></td>" +
+				"<table><tr class='channelRow'><td class='move'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span></td>" +
 				"<td class='nameContainer'><input class='channelName' value='{1}' /></td>" +
 				"<td class='edit'><span class='ui-icon ui-icon-pencil' onclick=\"$('#editor_{0}').removeAttr('disabled');\"></span></td>" +
 				"<td class='configContainer'><input id='editor_{0}' class='channelConfig' value='{2}' disabled='true' /></td>" +
@@ -61,10 +63,10 @@
 			$("#channels").append(sformat(newHTML, ident, name, config));
 		}
 		
-        function AddStation() {
+        function CreateChannel() {
+            if (!newName.value) { alert("Please pick a name for this station"); return; }
             if (!newSet.value && !newOrder.value) { alert("Please specify sort order"); return; }
             if (newSet.value && !newValues.value) { alert("Please specify criteria"); return; }
-            if (!newName.value) { alert("Please pick a name for this station"); return; }
             if (newValues.value && newValues.value.indexOf(' ') > -1) { alert("Criteria may not contain spaces.\nSeparate them by placing one on each row..."); return; }
 			if (newSet.value == "user" && newValues.value.indexOf("\n") > -1 ) { alert("You may only fetch albums from a single user."); return; }
 			var config = "";
@@ -93,103 +95,318 @@
 					config = "/?order=" + newOrder.value;
 			}
 			
-            AddChannel(newName.value, config);
-
-            designer.className = 'hidden';
+            AddChannel(newName.value, config); ClearDesigner();
+			return true;
         }
-		
+		function ClearDesigner() {
+			$('#designer input').add('#designer textarea').val('');
+			$('#designer select').attr('selectedIndex', 0);
+			
+			newValues.disabled = true;
+			newOrder.disabled = false;
+		}
 		$(function() {
-			$("#accordion").accordion({ fillSpace: true });
 			$("#channels").sortable();
 			$("#channels").disableSelection();
+			$(".fg-button:not(.ui-state-disabled)")
+				.hover(
+					function(){ 
+						$(this).addClass("ui-state-hover"); 
+					},
+					function(){ 
+						$(this).removeClass("ui-state-hover"); 
+					}
+				)
+				.mousedown(function(){
+						$(this).parents('.fg-buttonset-single:first').find(".fg-button.ui-state-active").removeClass("ui-state-active");
+						if( $(this).is('.ui-state-active.fg-button-toggleable, .fg-buttonset-multi .ui-state-active') ){ $(this).removeClass("ui-state-active"); }
+						else { $(this).addClass("ui-state-active"); }	
+				})
+				.mouseup(function(){
+					if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button,  .fg-buttonset-multi .fg-button') ){
+						$(this).removeClass("ui-state-active");
+					}
+				});
+			$(".contextMenu").mouseleave(function() { $(this).hide(500); });
+			setTimeout(function(){$("#accordion").fadeIn(500).accordion({ fillSpace: true, changestart: function(event, ui)	{ cIndex = parseInt(ui.newHeader.attr("index")); } });},150);
+
 		});
-	</script>
+		var cIndex = 0;
+		$(window).resize(function() { $("#accordion").fadeOut(500, function() { $("#accordion").accordion('destroy').fadeIn(500).accordion({ fillSpace: true, changestart: function(event, ui)	{ cIndex = parseInt(ui.newHeader.attr("index")); }, active: cIndex }); }); });
+    </script>
+
     <style type="text/css">
-		@import url(Theme/ui-darkness/jquery-ui-1.7.2.custom.css);
-		body { overflow:hidden }
-		ul				{ list-style-type:none; min-width:700px;}
-		.channel		{ white-space:nowrap; } .channel input { width:100%; }
-		.channel table  { width:100%;}
-		.nameContainer	{ width:250px; }
-		.channelConfig  { width:100%; }
-		.move, .edit
-		{ width:30px; }
-		.trash span, .edit span		
-		{ float:right; }
-		.nameTitle		{ margin:0 250px 0 50px; } .configTitle { width:65%; }
-        .hidden
+        @import url(Theme/custom-theme/jquery-ui-1.7.2.custom.css);
+        body
         {
-            display: none;
+            overflow: hidden;
         }
+        ul
+        {
+            list-style-type: none;
+        }
+        .channel
+        {
+            white-space: nowrap;
+        }
+        .channel input
+        {
+            width: 100%;
+        }
+        .channel table
+        {
+            width: 100%;
+        }
+        .nameContainer
+        {
+            width: 250px;
+        }
+        .channelConfig
+        {
+            width: 100%;
+        }
+        .move, .edit
+        {
+            width: 30px;
+        }
+        .trash span, .edit span
+        {
+            float: right;
+        }
+        .nameTitle
+        {
+            margin: 0 250px 0 50px;
+        }
+        .configTitle
+        {
+            width: 65%;
+        }
+        .inputBox
+        {
+            width: 250px;
+        }
+        .inputBox input, .inputBox select, .inputBox textarea
+        {
+            width: 100%;
+        }
+        .fg-button
+        {
+            outline: 0;
+            margin: 0 4px 0 0;
+            padding: .4em 1em;
+            text-decoration: none !important;
+            cursor: pointer;
+            position: relative;
+            text-align: center;
+            zoom: 1;
+        }
+        .fg-button .ui-icon
+        {
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            left: 50%;
+            margin-left: -8px;
+        }
+        a.fg-button
+        {
+            float: left;
+        }
+        .fg-button-icon-left
+        {
+            padding-left: 2.1em;
+        }
+        .fg-button-icon-right
+        {
+            padding-right: 2.1em;
+        }
+        .fg-button-icon-left .ui-icon
+        {
+            right: auto;
+            left: .2em;
+            margin-left: 0;
+        }
+        .fg-button-icon-right .ui-icon
+        {
+            left: auto;
+            right: .2em;
+            margin-left: 0;
+        }
+        .fg-button-icon-solo
+        {
+            display: block;
+            width: 8px;
+            text-indent: -9999px;
+        }
+        /* solo icon buttons must have block properties for the text-indent to work */.fg-buttonset
+        {
+            float: left;
+        }
+        .fg-buttonset .fg-button
+        {
+            float: left;
+        }
+        .fg-buttonset-single .fg-button, .fg-buttonset-multi .fg-button
+        {
+            margin-right: -1px;
+        }
+        .fg-toolbar
+        {
+            padding: .5em;
+            margin: 0;
+        }
+        .fg-toolbar .fg-buttonset
+        {
+            margin-right: 1.5em;
+            padding-left: 1px;
+        }
+        .fg-toolbar .fg-button
+        {
+            font-size: 1em;
+        }
+        .contextMenu
+        {
+            position: absolute;
+            overflow: hidden;
+        }
+        .contextMenu ul
+        {
+            -webkit-padding-start: 4px;
+            padding-left: 4px;
+			font: 18px 'Segoe UI', Arial, sans-serif;
+        }
+		.contextMenu li
+		{
+			margin-bottom: 4px;
+		}
     </style>
 </head>
-<body onload="restore_options()">
-	<table style="height:100%;width:100%;"><tr><td><div id="accordion">
-
-	<h3><a href="#">Jamendo Radio</a></h3>
-	<div>
-		<p>
-			<input type="checkbox" id="pageIntegration" style="width: 75px;" />Integrate with jamendo.com<br />
-			<input type="checkbox" id="skipDefault" style="width: 75px;" />Don't add the "Default" channel.<br />
-		</p>
-	</div>
-	<h3><a href="#">Channels</a></h3>
-	<div>
-		<p>
-			<span class="nameTitle">Name</span>
-			<span class="configTitle">Configuration string</span>
-		</p>
-		<ul id="channels">
-		</ul>
-	</div>
-	<h3><a href="#">Channel designer</a></h3>
-    <div id="designer">
-		<h2 style="margin:0;">Channel Designer</h2>
-        <dl>
-            <dt>Name</dt>
-            <dd>
-                <input id="newName" /></dd>
-            <dt>Selection</dt>
-            <dd>
-                <select id="newSet" onchange="newValues.disabled = this.selectedIndex == 0; newOrder.disabled = this.selectedIndex > 1;">
-                    <option value="">Everyting</option>
-                    <option value="tag">Tag(s)</option>
-                    <option value="artist">Artist(s)</option>
-                    <option value="album">Album(s)</option>
-					<option value="playlist">Playlist(s)</option>
-					<option value="jamradio">JamRadio(s)</option>
-					<option value="user">User starred albums</option>
-                </select>
-            </dd>
-            <dt>Criteria</dt>
-            <dd>
-                <textarea id="newValues" rows="6" cols="25" disabled="disabled" onblur="this.value = this.value.replace(/\n+/, '\n').replace(/\n*$/, '');"></textarea></dd>
-            <dt>Sorting</dt>
-            <dd>
-                <select id="newOrder">
-                    <option value="">No sorting</option>
-                    <option value="releasedate_desc">Release date</option>
-                    <option value="rating_desc">Rating</option>
-                    <option value="ratingweek_desc">Rating (weekly)</option>
-                    <option value="ratingmonth_desc">Rating (monthy)</option>
-                    <option value="playlisted_desc">Playlisted</option>
-                    <option value="downloaded_desc">Downloaded</option>
-                    <option value="listened_desc">Listened</option>
-                    <option value="starred_desc">Favourited</option>
-                </select>
-            </dd>
-        </dl>
-        <div style="text-align: center;">
-            <button id="clearDesigner" onclick="newName.value = newSet.value = newValues.value = newOrder.value = '';newValues.disabled = true">
-                Clear</button>
-            <button onclick="AddStation();">
-                Add channel</button>
-            <button onclick="designer.className='hidden'">
-                Cancel</button>
+<body onload="restore_options(); restore_channels();">
+    <div id="accordion" class="ui-helper-hidden">
+        <h3 index="0">
+            <a href="#">Jamendo Radio</a></h3>
+        <div>
+            <div class="fg-toolbar ui-widget-header ui-corner-all ui-helper-clearfix">
+                <div class="fg-buttonset fg-buttonset ui-helper-clearfix">
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="restore_options();">
+                        <span class="ui-icon ui-icon-refresh"></span>Restore</button>
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="save_options();">
+                        <span class="ui-icon ui-icon-disk"></span>Save</button>
+                </div>
+            </div><br />
+                <fieldset class="ui-corner-all">
+                    <legend>
+                        <input type="checkbox" id="pageIntegration" style="width: 25px;" />Integrate with
+                        Jamendo.com</legend>Activate this option to manipulate the play buttons on jamendo
+                    web pages so that they start the music within Jamendo Radio (this extension).
+                </fieldset>
+                <br />
+                <fieldset class="ui-corner-all">
+                    <legend>
+                        <input type="checkbox" id="skipDefault" style="width: 25px;" />Skip default channel.</legend>
+                    Prevent the popup window from adding the Default channel.</fieldset>
+        </div>
+        <h3 index="1">
+            <a href="#" id="channelButton">Channels</a></h3>
+        <div>
+            <div class="fg-toolbar ui-widget-header ui-corner-all ui-helper-clearfix">
+                <div class="fg-buttonset ui-helper-clearfix">
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="restore_channels();">
+                        <span class="ui-icon ui-icon-refresh"></span>Restore</button>
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="$('#presetContext').css('left', event.pageX -5).css('top', event.pageY -5).show(500)">
+                        <span class="ui-icon ui-icon-circle-plus"></span>Add preset</button>
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="save_channels();">
+                        <span class="ui-icon ui-icon-disk"></span>Save</button>
+                </div>
+            </div>
+            <p>
+                <span class="nameTitle">Name</span> <span class="configTitle">Configuration string</span>
+            </p>
+            <ul id="channels">
+            </ul>
+        </div>
+        <h3 index="2">
+            <a href="#">Channel designer</a></h3>
+        <div id="designer">
+            <div class="fg-toolbar ui-widget-header ui-corner-all ui-helper-clearfix">
+                <div class="fg-buttonset fg-buttonset ui-helper-clearfix">
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="ClearDesigner();">
+                        <span class="ui-icon ui-icon-circle-plus"></span>Clear</button>
+                    <button class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="if(CreateChannel())$('#channelButton').click();">
+                        <span class="ui-icon ui-icon-disk"></span>Add channel</button>
+                </div>
+            </div>
+            <p>
+                <table style="color: white;">
+                    <tr>
+                        <td>
+                            <fieldset class="ui-corner-all inputBox">
+                                <legend>Name</legend>
+                                <input id="newName" /></fieldset>
+                            <fieldset class="ui-corner-all inputBox">
+                                <legend>Base</legend>
+                                <select id="newSet" onchange="newValues.disabled = this.selectedIndex == 0; newOrder.disabled = this.selectedIndex > 1;">
+                                    <option value="">Everyting</option>
+                                    <option value="tag">Tag(s)</option>
+                                    <option value="artist">Artist(s)</option>
+                                    <option value="album">Album(s)</option>
+                                    <option value="playlist">Playlist(s)</option>
+                                    <option value="jamradio">JamRadio(s)</option>
+                                    <option value="user">User starred albums</option>
+                                </select></fieldset>
+                            <fieldset class="ui-corner-all inputBox">
+                                <legend>Tendency</legend>
+                                <select id="newOrder">
+                                    <option value="random">Completely Random</option>
+                                    <option value="releasedate_desc">Release date</option>
+                                    <option value="rating_desc">Rating</option>
+                                    <option value="ratingweek_desc">Rating (weekly)</option>
+                                    <option value="ratingmonth_desc">Rating (monthy)</option>
+                                    <option value="playlisted_desc">Playlisted</option>
+                                    <option value="downloaded_desc">Downloaded</option>
+                                    <option value="listened_desc">Listened</option>
+                                    <option value="starred_desc">Favourited</option>
+                                </select></fieldset>
+                        </td>
+                        <td style="vertical-align: top;">
+                            <fieldset class="ui-corner-all inputBox">
+                                <legend>Criteria</legend>
+                                <textarea id="newValues" rows="6" cols="25" disabled="disabled" onblur="this.value = this.value.replace(/\n+/, '\n').replace(/\n*$/, '');"></textarea></fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </p>
         </div>
     </div>
-</div>
-</td></tr><tr style="height:30px"><td>
-<div class="ui-state-error ui-corner-all" style="margin-bottom:14px;"><p><span class='ui-icon ui-icon-alert'></span><strong>Oh no!</strong></p></div></td></tr></table>
+    <div id="presetContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
+        <ul style="width: 300px;">
+            <li class="fg-button ui-state-default ui-corner-all" onclick="$('#jamradioContext').css('left', event.pageX -5).css('top', event.pageY -5).show(500)">
+                Pick a JamRadio...</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Psytrance', '/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six');">
+                Psytrance</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Rock', '+album_tag/?tag_idstr=rock&order=ratingweek_desc');">
+                Rock</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Piano', '/?order=random&album_id=29114+29279+888+2007+53704+55571+56448');">
+                Piano</li>
+        </ul>
+    </div>
+    <div id="jamradioContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
+        <ul style="width: 300px;">
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Dance / Electro', '+radio_track_inradioplaylist/?order=random&radio_id=4');">
+                Dance / Electro</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Hip-Hop', '+radio_track_inradioplaylist/?order=random&radio_id=5');">
+                Hip-Hop</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Jazz', '+radio_track_inradioplaylist/?order=random&radio_id=6');">
+                Jazz</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Lounge', '+radio_track_inradioplaylist/?order=random&radio_id=7');">
+                Lounge</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Metal', '+radio_track_inradioplaylist/?order=random&radio_id=283');">
+                Metal</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Pop / Songwriting', '+radio_track_inradioplaylist/?order=random&radio_id=8');">
+                Pop / Songwriting</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Rock', '+radio_track_inradioplaylist/?order=random&radio_id=9');">
+                Rock</li>
+        </ul>
+    </div>
 </body>
 </html>
