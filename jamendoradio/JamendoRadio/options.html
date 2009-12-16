@@ -7,6 +7,7 @@
     <script src="Theme/jquery-ui-1.7.2.custom.min.js"></script>
 
     <script type="text/javascript">
+        var idCounter = 0;
         function save_channels() {
             var options = new Array();
 			$(".channelRow").each(function() { options[options.length] = { "Name":this.children[1].children[0].value, "Subset": this.children[3].children[0].value }; });
@@ -52,7 +53,7 @@
 		}
 		
 		function AddChannel(name, config) {
-			var ident = "channel_" + new Date().getTime();
+			var ident = "channel_" + idCounter++;
 			
 			var newHTML = "<li id='{0}' class='ui-state-default channel'>" +
 				"<table><tr class='channelRow'><td class='move'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span></td>" +
