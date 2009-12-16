@@ -65,6 +65,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{E3980F
 		jamendoradio\JamendoRadio\Theme\ui-darkness\images\ui-icons_ffffff_256x240.png = jamendoradio\JamendoRadio\Theme\ui-darkness\images\ui-icons_ffffff_256x240.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "custom-theme", "custom-theme", "{1EAB6FD2-6741-4BD8-9C8C-FEFF9CC10D9C}"
+	ProjectSection(SolutionItems) = preProject
+		jamendoradio\JamendoRadio\Theme\custom-theme\jquery-ui-1.7.2.custom.css = jamendoradio\JamendoRadio\Theme\custom-theme\jquery-ui-1.7.2.custom.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{C9230081-4A09-41D9-88F5-E469DF8DAA14}"
+	ProjectSection(SolutionItems) = preProject
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_flat_30_cccccc_40x100.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_flat_30_cccccc_40x100.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_flat_50_5c5c5c_40x100.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_flat_50_5c5c5c_40x100.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_glass_20_555555_1x400.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_glass_20_555555_1x400.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_glass_40_aa00bb_1x400.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_glass_40_aa00bb_1x400.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_glass_40_ffc73d_1x400.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_glass_40_ffc73d_1x400.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_gloss-wave_25_333333_500x100.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_gloss-wave_25_333333_500x100.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_highlight-soft_80_eeeeee_1x100.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_highlight-soft_80_eeeeee_1x100.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_inset-soft_25_000000_1x100.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_inset-soft_25_000000_1x100.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_inset-soft_30_f58400_1x100.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-bg_inset-soft_30_f58400_1x100.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_222222_256x240.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_222222_256x240.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_4b8e0b_256x240.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_4b8e0b_256x240.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_a83300_256x240.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_a83300_256x240.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_cccccc_256x240.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_cccccc_256x240.png
+		jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_ffffff_256x240.png = jamendoradio\JamendoRadio\Theme\custom-theme\images\ui-icons_ffffff_256x240.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -78,6 +101,8 @@ Global
 		{4BA2B1BB-5EC1-43D2-90C6-E08DE961C13B} = {484AD356-5074-40F2-AFD7-5EB40033FF5B}
 		{EFC22CB6-2BC7-47EA-9308-9F55B2FC6D00} = {484AD356-5074-40F2-AFD7-5EB40033FF5B}
 		{6589342C-62EE-4D80-8235-ED2213F3C8A6} = {EFC22CB6-2BC7-47EA-9308-9F55B2FC6D00}
+		{1EAB6FD2-6741-4BD8-9C8C-FEFF9CC10D9C} = {EFC22CB6-2BC7-47EA-9308-9F55B2FC6D00}
 		{E3980F28-479F-40CF-A342-9AD89FCFDB1F} = {6589342C-62EE-4D80-8235-ED2213F3C8A6}
+		{C9230081-4A09-41D9-88F5-E469DF8DAA14} = {1EAB6FD2-6741-4BD8-9C8C-FEFF9CC10D9C}
 	EndGlobalSection
 EndGlobal
