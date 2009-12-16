@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jamendoradio", "jamendoradio", "{10C9AE48-A5A9-4820-B9B9-F39309B21845}"
 	ProjectSection(SolutionItems) = preProject
+		jamendoradio\JamendoRadio.crx = jamendoradio\JamendoRadio.crx
 		jamendoradio\JamendoRadio.pem = jamendoradio\JamendoRadio.pem
 		jamendoradio\Options.png = jamendoradio\Options.png
 		jamendoradio\Popup.png = jamendoradio\Popup.png
