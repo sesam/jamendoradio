@@ -45,7 +45,7 @@
         var url;
 		console.log("Entereing method: PopulatePlaylist");
         if (!prefetch) {
-			Unload(true);
+			Unload("loading");
 			if (!settings) settings = "/?order=ratingmonth_desc";
             url = "http://api.jamendo.com/get2/name+stream+album_name+album_url+album_image+artist_name+artist_url/track/json/track_album+album_artist" + settings;
 			url += "&streamencoding=ogg2";
@@ -69,7 +69,7 @@
         req.onload = function () {
             playList = eval(req.responseText);
 
-            if (playList.length < 1) { alert('Criteria yilded no songs!'); Unload(); return; }
+            if (playList.length < 1) { Unload("empty"); return; }
             IsReady = true;
 
             if (!prefetch) SetPlaylistPosition(0);
@@ -204,21 +204,27 @@
 
 	
     //Stops playing and remove current playlist.
-    function Unload(whileLoading) {
+    function Unload(status) {
         audio.src = "";
         audio.load();
         playList = null;
 		currentAPICall = "";
         IsReady = false;
         IsPlaying = false;
-		if(whileLoading) {
-			CurrentData = { "name": "Radio loading...", "album_name": "Please wait while", "artist_name": "I fetch some songs.", "album_image": "" };
-			AlbumImageLoaded = false;
+        switch(status) {
+            case "empty":
+                CurrentData = { "name": "Radio failure...", "album_name": "The query failed to", "artist_name": "find any songs.", "album_image": "Images/splash.jpg" };
+    			AlbumImageLoaded = false;
+                break;
+            case "loading":
+                CurrentData = { "name": "Radio loading...", "album_name": "Please wait while", "artist_name": "I fetch some songs.", "album_image": "Images/splash.jpg" };
+    			AlbumImageLoaded = false;
+                break;
+		    default:
+    			CurrentData = { "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
+	    		AlbumImageLoaded = true;
 		}
-		else {
-			CurrentData = { "name": "No radio loaded", "album_name": "Please select a", "artist_name": "channel below...", "album_image": "Images/splash.jpg" };
-			AlbumImageLoaded = true;
-		}
+
         CurrentPosition = -1;
 
         if (OnPositionChanged)
