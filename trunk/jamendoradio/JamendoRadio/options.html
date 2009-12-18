@@ -382,13 +382,13 @@
     <div id="presetContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
         <ul style="width: 300px;">
             <li class="fg-button ui-state-default ui-corner-all" onclick="$('#jamradioContext').css('left', event.pageX -5).css('top', event.pageY -5).show(500)">
-                Pick a JamRadio...</li>
-            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Psytrance', '/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six');">
-                Psytrance</li>
-            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Rock', '+album_tag/?tag_idstr=rock&order=ratingweek_desc');">
-                Rock</li>
-            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Piano', '/?order=random&album_id=29114+29279+888+2007+53704+55571+56448');">
-                Piano</li>
+                JamRadios...</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="$('#electronicaContext').css('left', event.pageX -5).css('top', event.pageY -5).show(500)">
+                Electronica...</li>
+			<li class="fg-button ui-state-default ui-corner-all" onclick="$('#popContext').css('left', event.pageX -5).css('top', event.pageY -5).show(500)">
+                Pop and rock...</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="$('#classicContext').css('left', event.pageX -5).css('top', event.pageY -5).show(500)">
+                Acoustic and classical...</li>
         </ul>
     </div>
     <div id="jamradioContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
@@ -409,5 +409,36 @@
                 Rock</li>
         </ul>
     </div>
-</body>
+	<div id="electronicaContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
+        <ul style="width: 300px;">
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Trance/Goa', '/?order=random&artist_idstr=subatomicglue+psydom+nexus+red.nebula+secret.side+xl.ant+six');">
+                Trance/Goa</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Chillout', '+album_tag/?tag_idstr=ambient+chillout&order=rating_desc');">
+                Chillout</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('8-Bit / Demoscene', '+album_tag/?tag_idstr=8bit+demoscene&order=starred_desc');">
+                8-Bit / Demoscene</li>
+        </ul>
+    </div>
+    <div id="popContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
+        <ul style="width: 300px;">
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Indie Pop', '/?order=random&album_id=20784+7098+23755+43195+6339+56070+9604+38655+53847');">
+                Indie pop</li>
+			<li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Folk', '+album_tag/?tag_idstr=chanson+folk&order=rating_desc');">
+                Folk</li>
+			<li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Rock', '+album_tag/?tag_idstr=progressive+rock&order=rating_desc');">
+                Rock</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Indie Pop', '/?order=random&artist_idstr=antarhes+holy.pain+cynism+weirdland+scoldt+nocreeps+arai');">
+                Metal</li>			
+        </ul>
+    </div>
+	<div id="classicContext" class="ui-helper-hidden ui-widget-header ui-corner-all contextMenu">
+        <ul style="width: 300px;">
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Piano', '/?order=random&album_id=29114+29279+2007+53704+55571+56448+45056+44920+45611');">
+                Piano</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Orchestral', '/?order=random&album_id=43099+38846+44547+4383+3097+16649+36771');">
+                Orchestral</li>
+            <li class="fg-button ui-state-default ui-corner-all" onclick="AddChannel('Opera', '+album_tag/?tag_idstr=opera&order=rating_desc');">
+                Opera</li>
+        </ul>
+    </div></body>
 </html>
