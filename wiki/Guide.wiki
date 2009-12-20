@@ -7,36 +7,21 @@ When the radio is playing, the popup will display the playback controls Play/Pau
 
 You can also allow the extension to integrate with www.jamendo.com, and make all play-buttons start the music within this extension.
 
-
 = Configuration =
 
-To add more channels, use the options page. If you enter the options, with no channels configured, three sample channels will be added. A channel has a name and a “subset” string, which acts as criteria for music.
+To add more channels, use the options page..
 
-When constructing the subset string use & (ampersand) to separate the key value pairs, and + (plus) to separate multiple values.
+The configuration string, in the channels section is formatted in the following way:
 
-Three main keys are used for selecting music:
-  * *tag_idstr* : Delimits tracks to the specified tag(s). <br>_Example:_ {{{tag_idstr=rock, tag_idstr=classical+piano+calm}}}
+{{{[+<joins>]/?order=<tendency>[&<additional parameters[&]>]}}}
 
-  * *artist_idstr* : Delimits tracks to the specified artist(s). You can get the idstr of an artist by looking at the end of the url of a artist page on jamendo. <br>_Example:_ {{{artist_idstr=psydom, artist_idstr=Dazie_Mae_(2)+Diablo_Swing_Orchestra_(2)}}}
+The joins are used when fetching songs using sources not immediately associated with the actual track. Jamendo Radio reserves the following joins:
+  * track_album
+  * album_artist
 
-  * *album_id*: Delimits track to the specified album(s). You can get the album id by looking at the end of the url of an album page on jamendo. <br>_Example:_ {{{album_id=29114+29279+888+2007+53704}}}
-
-_*Note:* These keys does not combine well. Combinations are mostly intended for ordering (like weekly/monthly/overall popularity/ratings/reviews etc.). The key name here is "order"._ See the [http://developer.jamendo.com/en/wiki/Musiclist2Api Jamendo API documentation] for more information about ordering.
-
-=== Say what? ===
-So lets say you find an album that you want to add to a channel. E.g. 
-http://www.jamendo.com/en/album/55571
-
-See the last five digits?
-In the options, the subset string for “Piano” looks like this:
-“album_id=29114+29279+888+2007+53704″
-
-To include the newly found album in this selection set, I add the digits to the end of the subset string, separating it with a “+”. (For copy paste:
-“album_id=29114+29279+888+2007+53704+55571″).
-
-To add a new station, click add. Enter a name, i.e “Relaxing”. Then enter as subset string: “tag_idstr=relaxing+calm&order=ratingweek”.
+Information about additional parameters can be found in the [http://developer.jamendo.com/en/wiki/Musiclist2Api Jamendo API documentation]. 
 
 = Channel designer =
-New in v1.5 is the channel designer. It is a simple dialog that should help in the designing of channels. It contains rudimentary error checking, so it is harder to make mistakes. Also, it has all criteria keys, and all order values contained in drop downs.
+New since v1.5 is the channel designer. It should help in the designing of channels. It contains rudimentary error checking, so it is harder to make mistakes. Also, it has all criteria keys, and all order values contained in drop downs.
 
 When entering values for the criteria, do not use any spaces, and separate each value by placing them on single rows.
