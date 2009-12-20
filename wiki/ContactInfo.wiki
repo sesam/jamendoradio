@@ -1,13 +1,10 @@
-#summary Contact the programmers - HELP WANTED
+#summary Contact the programmers
 
 = Contact the project owner =
 You can either drop me a mail, or post a comment here.
 
 My mail is fredrik.schiller(at)gmail.com
 
-= Help Wanted =
-I'm no designer. Something that should be painstakingly obvious to anyone visiting the options page of this extension. So I need some help here, to get a proper page design, some colors (preferably orange, with purple highlights, so it follows Jamendo's color scheme).
 
-The popup could also use some design work. I would like larger control buttons, and maybe build in jquery and make some nifty animations.
-
-I'm very open to suggestions here, and if I get a lot of response, I could even build support for skins...
+I'm planning to add support for skins.
+So if you have some graphical talents, and want to contribute a music player interface, please contact me!
