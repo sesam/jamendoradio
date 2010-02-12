@@ -22,5 +22,6 @@ I have added custom parsing to resolve this, but I want more testing done, befor
 (So far, this only affects the "artist" with Jamendo id "psydom". Their current name is "# Psytrance Brazil #", and before that they were known as "Speedsound", and before that "Psydom Recordz"...)
 
 To find the beta version:
-{{{Top menu item "Source" -> sub-menu "Browse" -> expand "Trunk" -> expand "JamendoRadio", click the file JamendoRadio.crx.}}} 
+{{{Top menu item "Source" -> sub-menu "Browse" -> expand "Trunk" -> expand "JamendoRadio", click the file JamendoRadio.crx. -> click "View raw file" to download}}} 
+
 THIS VERSION DOES NOT SUPPORT AUTO-UPDATING!
