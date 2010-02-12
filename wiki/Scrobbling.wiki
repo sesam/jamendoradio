@@ -17,6 +17,10 @@ If everything went as it should, you should see a green status message "Connecti
 There is a record label, which posts many albums to Jamendo.
 However, in doing so, they mark themselves as artist, and the actual artist name is combined with the track-names (and sometimes with the album name as well).
 
-I have added custom parsing to resolve this, but I want more testing done, before I release this to the public. If you want to help me test, download the compiled extension from the trunk. 
+I have added custom parsing to resolve this, but I want more testing done, before I release this to the public. If you want to help me test, download the compiled extension from the trunk.
 
-(Top menu item "Source" -> sub-menu "Browse" -> expand "Trunk" -> expand "JamendoRadio", click the file JamendoRadio.crx). THIS VERSION DOES NOT SUPPORT AUTO-UPDATING!
+(So far, this only affects the "artist" with Jamendo id "psydom". Their current name is "# Psytrance Brazil #", and before that they were known as "Speedsound", and before that "Psydom Recordz"...)
+
+To find the beta version:
+{{{Top menu item "Source" -> sub-menu "Browse" -> expand "Trunk" -> expand "JamendoRadio", click the file JamendoRadio.crx.}}} 
+THIS VERSION DOES NOT SUPPORT AUTO-UPDATING!
