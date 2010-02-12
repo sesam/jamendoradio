@@ -26,3 +26,4 @@ To find the beta version:
 {{{Top menu item "Source" -> sub-menu "Browse" -> expand "Trunk" -> expand "JamendoRadio", click the file JamendoRadio.crx. -> click "View raw file" to download}}} 
 
 THIS VERSION DOES NOT SUPPORT AUTO-UPDATING!
+(But it can be loaded in parallel with the official version since they have different ids. Just disable the version you don't need atm.)
