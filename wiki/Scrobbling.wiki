@@ -4,6 +4,7 @@
 
 From version 1.8.0, Jamendo Radio also supports scrobbling to audioscrobbler (last.fm).
 
+It was my intention to support scrobbling to Jamendo as well, but I get a BADSESSION error, even though the handshake is successful, when submitting...
 
 = Details =
 
