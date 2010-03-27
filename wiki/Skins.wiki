@@ -1,0 +1,25 @@
+#summary Making and using JamendoRadio skins.
+
+= Introduction =
+
+Skins are created as subfolders of the folder styles.
+In the folder, you need a skin.css file as well as a lot of small image files.
+
+The default skin has the following files in its subdirectory:
+skin.css
+background.png
+next-active.png
+next.png
+pause-active.png
+pause-hover.png
+pause.png
+play-active.png
+play-hover.png
+play.png
+stop-active.png
+stop.png
+volume-active.png
+volume.png
+
+
+Note: Currently you need javascript dev skills to add/change the included skills.
