@@ -33,3 +33,8 @@ The HTML structure of the popup consists of the following elements (the title is
   * *title, album, artist* - These contains info about the song that is currently played. If the text is too long, it will scroll in this container. You can add extra space to the end of the container by specifying the padding-right, thus allowing finer control of how the text scrolls.
   * *play, pause, next, stop* - The play element will have their css class updated to reflect the current playback status (play or pause). And all of these elements will be invisible when no radio is loaded.
   * *ui-slider, ui-slider-handle* - This controls the volume slider.
+
+=== Intentions ===
+It would be possible to create an entire skins designer, but perhaps that is overkill. 
+
+It would be interesting to see if it would be possible to somehow use the local storage/database, to allow the user to upload custom skins..
