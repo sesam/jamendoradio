@@ -23,6 +23,8 @@ volume-active.png
 volume.png
 }}}
 
+The image files are completely arbitrary, the only file that may not be named any other way is the skin.css.
+
 There is no HTML to edit, it is static and defined in the popup.html file. What you are allowed to do, is change the images and positions of the already declared elements using CSS.
 
 The HTML structure of the popup consists of the following elements (the title is the css class of the element):
