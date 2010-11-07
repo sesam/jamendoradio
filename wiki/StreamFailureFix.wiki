@@ -2,11 +2,11 @@
 
 = Fix what? =
 
-The most recent official version of Google Chrome broke the streaming support in Jamendo Radio. Follow these steps to fix it.
+The most recent version of Google Chrome broke the streaming support in Jamendo Radio.
 
-*This will only work with the latest beta! But I will finalize that code and publish it as official this weekend. In the meantime, you can find a link to the beta from the Project Home page, but that will break auto-updating.* _(as if that is needed considering my pace of development :P)_
+You need to start Chrome with the command line switch "--disable-byte-range-support" for it to work again.
 
-= Steps =
+= Short guide for windows users =
 
 1. Create a shortcut to the chrome.exe file on the desktop (or somewhere else, if you prefer).
 
