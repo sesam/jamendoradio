@@ -12,7 +12,7 @@ You need to start Chrome with the command line switch "--disable-byte-range-supp
 
 2. Open the properties for the newly created shortcut.
 
-3. In the field "Target", to "--disable-byte-range-support" to the end, and be sure to separate it with a space.
+3. In the field "Target", add " --disable-byte-range-support" to the end, and be sure to separate it with a space.
 
 4. Launch chrome using that shortcut. Jamendo Radio will now be able to stream as before.
 
