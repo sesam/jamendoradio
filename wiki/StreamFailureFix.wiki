@@ -6,15 +6,5 @@ The most recent version of Google Chrome broke the streaming support in Jamendo 
 
 You need to start Chrome with the command line switch "--disable-byte-range-support" and/or "--simple-data-source" for it to work again.
 
-= Short guide for windows users =
-
-1. Create a shortcut to the chrome.exe file on the desktop (or somewhere else, if you prefer).
-
-2. Open the properties for the newly created shortcut.
-
-3. In the field "Target", add "  --simple-data-source" to the end, and be sure to separate it with a space. (In Chrome version 7 and to 8 you can also use --disable-byte-range-support)
-
-4. Launch chrome using that shortcut. Jamendo Radio will now be able to stream as before.
-
-
-For reference, the target-field of my shortcut looks like this: "C:\Users\Fredrik\AppData\Local\Google\Chrome\Application\chrome.exe --disable-byte-range-support" and streaming works fine for me again ("thank *arbitrary higher power*")
+= --- This problem is now resolved --- =
+You may enjoy Jamendo Radio without editing any shortcuts!
