@@ -5,7 +5,7 @@
 The popup lists the currently configured channels. To start, simply click the name.
 When the radio is playing, the popup will display the playback controls Play/Pause, Stop, Next and a volume control.
 
-You can also allow the extension to integrate with www.jamendo.com, and make all play-buttons start the music within this extension.
+You can also allow the extension to integrate with www.jamendo.com, and make all play-buttons on that website start the music within this extension.
 
 = Configuration =
 
