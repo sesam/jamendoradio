@@ -1,4 +1,4 @@
-#How to make new channels using the Channel Designer
+#summary How to make new channels using the Channel Designer
 
 = Introduction =
 
