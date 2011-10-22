@@ -24,7 +24,7 @@ The channel designer can be somewhat intimidating. Please read the following ste
 
 5. Press the button "Add channel", which will construct the configuration string for you, and take you to the "Channels" page. Press "Save" here, to finalize your new channel.
 
-Note: To find the id, visit the Jamendo page for the particular artist/album/playlist and enter the last part of the URL.
+*Note:* To find the id, visit the Jamendo page for the particular artist/album/playlist and enter the last part of the URL.
 I.E: for a playlist like http://www.jamendo.com/en/playlist/212258 the id would be 212258, or for an artist like http://www.jamendo.com/en/artist/Tunguska_Chillout_Grooves_vol.1, the id would be "Tunguska_Chillout_Grooves_vol.1"
 
-Special note: It seems it is impossible to create custom radios on Jamendo now, so don't pick this option... 
+*Special note:* It seems it is impossible to create custom radios on Jamendo now, so don't pick this option... 
