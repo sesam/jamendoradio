@@ -12,7 +12,7 @@ The channel designer can be somewhat intimidating. Please read the following ste
 2. Select what this channel will use to find songs. This may be one or several tags, tracks, albums etc. Decide using the _Base_ drop down menu.
 
 3. If applicable, select a "sort order" for your channel, and enter this in _Tendency_. 
-(This works when there is a large selection of songs. If you have "Tags" or "Everything" as base, a channel randomly chooses songs from the first 500 songs, sorted according to your selected tendency.
+(This works when there is a large selection of songs. If you have "Tags" or "Everything" as base, a channel randomly chooses songs from the first 500 songs, sorted according to your selected tendency.)
 
 4. Fill in the criteria. What you enter here depends on what you picked as _Base_
  * *Tags:* One free text tag on each line
