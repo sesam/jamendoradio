@@ -27,6 +27,7 @@ The channel designer can be somewhat intimidating. Please read the following ste
 *Note:* To find the id, visit the Jamendo page for the particular artist/album/playlist and enter the last part of the URL.
 I.E: for a playlist like http://www.jamendo.com/en/playlist/212258 the id would be 212258, or for an artist like http://www.jamendo.com/en/artist/Tunguska_Chillout_Grooves_vol.1, the id would be "Tunguska_Chillout_Grooves_vol.1"
 
-*Special note:* It seems it is impossible to create custom radios on Jamendo now, so don't pick this option... 
+*Special note:* It seems it is impossible to create custom radios on Jamendo now, so don't pick this option...
+If you are still adamant, it is the numerical id of the station, which you will have to find in the source. Feel free to experiment, but I do not recommend using this option!
 
 *Additional note:* If you select to integrate this extension with Jamendo.com, you can add albums to album-based channels, or artists to artist-based channels from the context menu (right click) when viewing the respective page in the browser.
